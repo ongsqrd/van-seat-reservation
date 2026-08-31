@@ -1,0 +1,19 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+
+# PHP
+/vendor/
+*.log
+
+# Environment
+config.php
+.env
+*.local.php
+
+/public/uploads/*
+!/public/uploads/.gitkeep
