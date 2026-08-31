@@ -1,0 +1,43 @@
+/* Load the font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+Thai:wght@400;500;600&display=swap');
+
+/* Define the design tokens */
+:root {
+  --brand-primary: #c20114;
+  --brand-tint:    #f4e4e8;
+  --yellow:        #facc15;
+  --yellow-bg:     #fef9c3;
+  --green:         #16a34a;
+  --green-bg:      #dcfce7;
+  --surface:       #fdfdfc;
+  --surface-alt:   #eaeaea;
+  --text-muted:    #a6a6a6;
+  --text-secondary:#6e6e6e;
+  --text-primary:  #100f0d;
+  --border:        #cecece;
+  --on-primary:    #ffffff;
+
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 16px;
+  --space-4: 32px;
+  --radius:  8px;
+
+  --font-body: 'Inter', 'Noto Sans Thai', sans-serif;
+}
+
+/* Use the tokens with var() */
+body {
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+.btn-primary {
+  background: var(--brand-primary);
+  color: #fff;
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  border: none;
+}
