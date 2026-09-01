@@ -8,6 +8,11 @@
 </head>
 
 <body>
+
+    <?php
+        include '../includes/navbar.php';
+    ?>
+
     <main class="route-container">
         <div class="header-route">
             <h2 class="header-centered">Choose your Route</h2>
