@@ -24,12 +24,14 @@
   --space-3: 16px;
   --space-4: 32px;
   --space-5: 64px;
+  --space-6: 128px;
   --radius:  8px;
 
   --size-1: 10px;
   --size-2: 14px;
   --size-3: 18px;
   --size-4: 24px;
+  --size-5: 50px;
 
   --font-body: 'Inter', 'Noto Sans Thai', sans-serif;
 }
@@ -43,10 +45,29 @@ body {
 
 }
 
+p {
+  font-size: var(--size-3);
+  line-height: 1.25em;
+}
+
 .btn-primary {
   background: var(--brand-primary);
   color: #fff;
   padding: var(--space-2-5);
+  border-radius: var(--radius);
+  border: none;
+  width: 25%;
+
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  font-size: var(--size-2);
+}
+
+.btn-secondary {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+  padding: var(--space-2-5);
+  width: 25%;
   border-radius: var(--radius);
   border: none;
 
@@ -54,6 +75,14 @@ body {
   font-weight: 600;
   font-size: var(--size-2);
 }
+
+.btn-secondary:hover {
+  background: var(--brand-tint);
+  color: var(--brand-primary);
+  cursor: pointer;
+}
+
+
 
 .btn-centered {
   display: block;
@@ -115,4 +144,18 @@ body {
 a {
   color: var(--brand-primary);
   text-decoration: underline;
+}
+
+/* landing */
+.landing-content {
+  text-align: left;
+  padding: var(--space-5);
+  margin: var(--space-6);
+}
+
+.landing-title {
+  font-size: var(--size-5);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+  line-height: 0.95em;
 }
