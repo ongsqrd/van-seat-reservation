@@ -9,18 +9,20 @@
 </head>
 
 <body>
-            <h1>AU VAN<br>BOOKING</h1>
+    <main class="landing-content">
+    <h1 class="landing-title">AU VAN<br>BOOKING</h1>
 
-            <p>
-                Welcome to our AU Van booking service.
-                Where would you like to go today? If you are
-                new here, click Join Now to sign up and
-                make an account.
-            </p>
+        <p>
+            Welcome to our AU Van booking service.
+            Where would you like to go today? If you are
+            new here, click Join Now to sign up and
+            make an account. 
+        </p>
 
-            <div class="button-container">
-                <button type="button" class="join-button">Join now</button>
-                <button type="button" class="login-button">Log in</button>
-            </div>
+        <div class="button-container">
+            <button type="button" class="btn-primary">Join now</button>
+            <button type="button" class="btn-primary btn-secondary">Log in</button>
+        </div>
+    </main>
 </body>
 </html>
