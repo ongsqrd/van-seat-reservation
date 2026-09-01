@@ -7,18 +7,25 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <div class="header-centered">
+        <h2>Welcome Back!</h2>
+    </div>
+
     <div class="login-container">
-        <h2>Login</h2>
         <form action="login_process.php" method="POST">
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required>
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            <button type="submit" class="btn-primary">Login</button>
+            <button type="submit" class="btn-primary btn-centered">Login</button>
+            <br>
+            <div class="navlink-centered">
+                <label for="no-account">Don't have an account? <a href="register.php">Register here</a></label>
+            </div>
         </form>
     </div>
 </body>
