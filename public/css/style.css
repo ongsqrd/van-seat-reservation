@@ -20,8 +20,10 @@
 
   --space-1: 4px;
   --space-2: 8px;
+  --space-2-5: 12px;
   --space-3: 16px;
   --space-4: 32px;
+  --space-5: 64px;
   --radius:  8px;
 
   --size-1: 10px;
@@ -37,18 +39,23 @@ body {
   background: var(--surface);
   color: var(--text-primary);
   font-family: var(--font-body);
+  letter-spacing: 0.005em;
+
 }
 
 .btn-primary {
   background: var(--brand-primary);
   color: #fff;
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-2-5);
   border-radius: var(--radius);
   border: none;
+
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  font-size: var(--size-2);
 }
 
 .btn-centered {
-  padding: var(--space-2) var(--space-3);
   display: block;
   width: 30%;
   margin: var(--space-4) auto;
@@ -62,9 +69,10 @@ body {
   font-size: var(--size-4);
 }
 
+
 .login-container {
   max-width: 400px;
-  margin: 100px auto;
+  margin: 60px auto;
   padding: var(--space-2);
   border-radius: var(--radius);
   line-height: 2;
@@ -73,9 +81,23 @@ body {
 
 .form-group {
   display: grid;
-  gap: var(--space-2);
-  grid-template-columns: auto 1fr;
-  align-items: center
+  row-gap: var(--space-1);
+  margin-bottom: var(--space-3);
+}
+
+.form-group label {
+  font-size: var(--size-2);
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+.input-field {
+  appearance: none;
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  width: 100%;
 }
 
 .navlink-centered {
@@ -84,4 +106,9 @@ body {
   align-items: center;
   margin-top: var(--space-1);
   font-size: var(--size-2);
+}
+
+a {
+  color: var(--brand-primary);
+  text-decoration: underline;
 }
