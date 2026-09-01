@@ -17,7 +17,7 @@ All pages share the same shell:
   <title>[Page name]</title>
 </head>
 <body>
-  <!-- navbar include goes here later -->
+  <?php include '../includes/navbar.php';?>
   <main class="page">
     <!-- pattern content goes here -->
   </main>
