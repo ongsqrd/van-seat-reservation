@@ -22,6 +22,7 @@
   --space-2: 8px;
   --space-2-5: 12px;
   --space-3: 16px;
+  --space-3-5: 24px;
   --space-4: 32px;
   --space-5: 64px;
   --space-6: 128px;
@@ -32,6 +33,10 @@
   --size-3: 18px;
   --size-4: 24px;
   --size-5: 50px;
+
+  --size-h3: 20px;
+  --size-h2: 40px;
+  --size-h1: 32px;
 
   --font-body: 'Inter', 'Noto Sans Thai', sans-serif;
 }
@@ -47,7 +52,17 @@ body {
 
 p {
   font-size: var(--size-3);
-  line-height: 1.25em;
+  
+}
+
+h2 {
+  font-size: var(--size-h2);
+  font-weight: 600;
+}
+
+h3 {
+  font-size: var(--size-h3);
+  font-weight: 600;
 }
 
 .btn-primary {
@@ -82,7 +97,7 @@ p {
   cursor: pointer;
 }
 
-
+/* login section*/
 
 .btn-centered {
   display: block;
@@ -92,16 +107,17 @@ p {
 
 .header-centered {
   text-align: center;
-  margin-top: var(--space-4);
-  padding-top: var(--space-4);
-  margin-bottom: var(--space-4);
-  font-size: var(--size-4);
+  margin-bottom: var(--space-1);
 }
 
+.login-section {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+}
 
 .login-container {
   max-width: 400px;
-  margin: 60px auto;
+  margin: 30px auto;
   padding: var(--space-2);
   border-radius: var(--radius);
   line-height: 2;
@@ -146,6 +162,29 @@ a {
   text-decoration: underline;
 }
 
+.no-account {
+  font-size: var(--size-2-5);
+}
+
+/* picture assets */
+.van-icon svg {
+  width: var(--space-5);  
+  height: auto;
+  transform: scaleX(-1);
+}
+
+.van-icon {
+  margin-right: var(--space-4);
+  margin-left: var(--space-3);
+  display: flex;
+  align-items: center;
+}
+
+.van-icon svg:hover {
+  fill: var(--brand-primary);
+  cursor: pointer;
+}
+
 /* landing */
 .landing-content {
   text-align: left;
@@ -158,4 +197,47 @@ a {
   font-weight: 600;
   margin-bottom: var(--space-3);
   line-height: 0.95em;
+}
+
+/** trips **/
+.header-route {
+  line-height: 1.25em;
+  padding-top: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.route-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.route-options {
+  padding: var(--space-4);
+  display: grid;
+  row-gap: var(--space-1);
+  justify-items: center;
+}
+
+.route-card {
+  display: flex;
+  align-items: center;
+  background: var(--surface);
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  margin-bottom: var(--space-3);
+  width: 80%;
+}
+
+.route-info {
+  text-align: left;
+  line-height: 0.1em;
+}
+
+.route-card:hover {
+  background: var(--brand-tint);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
 }
