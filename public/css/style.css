@@ -24,6 +24,11 @@
   --space-4: 32px;
   --radius:  8px;
 
+  --size-1: 10px;
+  --size-2: 14px;
+  --size-3: 18px;
+  --size-4: 24px;
+
   --font-body: 'Inter', 'Noto Sans Thai', sans-serif;
 }
 
@@ -37,11 +42,9 @@ body {
 .btn-primary {
   background: var(--brand-primary);
   color: #fff;
-  padding: var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius);
   border: none;
-<<<<<<< Updated upstream
-=======
 }
 
 .btn-centered {
@@ -81,5 +84,4 @@ body {
   align-items: center;
   margin-top: var(--space-1);
   font-size: var(--size-2);
->>>>>>> Stashed changes
 }

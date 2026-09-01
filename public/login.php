@@ -7,25 +7,26 @@
   <title>Login</title>
 </head>
 <body>
-  <!-- navbar include goes here later -->
-  <main class="page">
-    <section class="form-card">
-        <header class="form-header">
-            <h2>Welcome Back!</h2>
-        </header>
+    <div class="header-centered">
+        <h2>Welcome Back!</h2>
+    </div>
 
-        <form action="[action].php" method="POST">
+    <div class="login-container">
+        <form action="login_process.php" method="POST">
             <div class="form-group">
-            <label for="phone">Phone</label>
-            <input type="tel" id="phone" name="phone" required>
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required>
             </div>
 
             <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
             </div>
-
             <button type="submit" class="btn-primary btn-centered">Login</button>
+            <br>
+            <div class="navlink-centered">
+                <label for="no-account">Don't have an account? <a href="register.php">Register here</a></label>
+            </div>
         </form>
 
         <p class="form-footer">
