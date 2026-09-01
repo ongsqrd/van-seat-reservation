@@ -79,6 +79,10 @@ body {
   font-size: var(--size-3);
 }
 
+.login-container-newAcc {
+  margin: 30px auto;
+}
+
 .form-group {
   display: grid;
   row-gap: var(--space-1);
