@@ -20,8 +20,9 @@
             </div>
 
             <button type="submit" class="btn-primary btn-centered">Login</button>
-            
+
             <br>
+            
             <div class="navlink-centered">
                 <label for="no-account">Don't have an account? <a href="register.php">Register here</a></label>
             </div>
