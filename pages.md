@@ -64,25 +64,25 @@ up with `booking.php`, `book.php`, and `bookingPage.php` for the same screen.
 
 The Canva mockups use different labels. Map them to filenames here:
 
-| Canva label | Filename |
-|---|---|
-| landing-page | `landing.php` |
-| login-page | `login.php` |
-| registration-page | `register.php` |
-| route-selection | `trips.php` |
-| time-selection | `trip-times.php` |
-| confirm-booking | `booking-confirm.php` |
-| booking confirmed | `booking-success.php` |
-| ticket-page | `ticket.php` |
-| booking history | `my-bookings.php` |
-| profile: passenger | `profile.php` |
-| driver-dashboard | `driver-dashboard.php` |
-| driver-trip-details | `driver-trip.php` |
-| driver-trip-checkin | `driver-checkin.php` |
-| profile: driver | `driver-profile.php` |
-| admin-dashboard | `admin-dashboard.php` |
-| admin-trips | `admin-trips.php` |
-| admin-manage: * | `admin-manage.php` |
-| profile: admin | `admin-profile.php` |
+| Canva label | Filename | Title|
+|---|---| ---|
+| landing-page | `landing.php` | AU VAN |
+| login-page | `login.php` | AU VAN - Login |
+| registration-page | `register.php` | AU VAN - Register |
+| route-selection | `trips.php` | AU VAN - Route |
+| time-selection | `trip-times.php` | AU VAN - Time |
+| confirm-booking | `booking-confirm.php` | AU VAN - Booking |
+| booking confirmed | `booking-success.php` | AU VAN - Confirmed |
+| ticket-page | `ticket.php` | AU VAN - Ticket |
+| booking history | `my-bookings.php` | AU VAN - History |
+| profile: passenger | `profile.php` | AU VAN - Passenger |
+| driver-dashboard | `driver-dashboard.php` | AU VAN - Dashboard |
+| driver-trip-details | `driver-trip.php` |  AU VAN - Details |
+| driver-trip-checkin | `driver-checkin.php` | AU VAN - Check-in |
+| profile: driver | `driver-profile.php` | AU VAN - Driver |
+| admin-dashboard | `admin-dashboard.php` | AU VAN - Dashboard |
+| admin-trips | `admin-trips.php` | AU VAN - Trips |
+| admin-manage: * | `admin-manage.php` | AU VAN - Manage |
+| profile: admin | `admin-profile.php` | AU VAN - Admin |
 
 ---
