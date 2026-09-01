@@ -40,4 +40,46 @@ body {
   padding: var(--space-3);
   border-radius: var(--radius);
   border: none;
+<<<<<<< Updated upstream
+=======
+}
+
+.btn-centered {
+  padding: var(--space-2) var(--space-3);
+  display: block;
+  width: 30%;
+  margin: var(--space-4) auto;
+}
+
+.header-centered {
+  text-align: center;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  margin-bottom: var(--space-4);
+  font-size: var(--size-4);
+}
+
+.login-container {
+  max-width: 400px;
+  margin: 100px auto;
+  padding: var(--space-2);
+  border-radius: var(--radius);
+  line-height: 2;
+  font-size: var(--size-3);
+}
+
+.form-group {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: auto 1fr;
+  align-items: center
+}
+
+.navlink-centered {
+  appearance: none;
+  text-align: center;
+  align-items: center;
+  margin-top: var(--space-1);
+  font-size: var(--size-2);
+>>>>>>> Stashed changes
 }
