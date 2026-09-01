@@ -48,11 +48,10 @@ body {
 }
 
 .btn-centered {
-  margin-top: var(--space-4);
   padding: var(--space-2) var(--space-3);
   display: block;
   width: 30%;
-  margin: 0 auto;
+  margin: var(--space-4) auto;
 }
 
 .header-centered {
