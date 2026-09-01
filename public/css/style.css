@@ -31,6 +31,7 @@
   --size-1: 10px;
   --size-2: 14px;
   --size-3: 18px;
+  --size-3-5: 20px;
   --size-4: 24px;
   --size-5: 50px;
 
@@ -188,9 +189,10 @@ a {
 /* navigation bar */
 .navbar {
   background: var(--brand-primary);
-  padding: var(--space-2-5);
+  padding: var(--space-2);
   display: flex;
   justify-content: space-between;
+  justify-items: center;
   align-items: center;
   border-bottom: 1px solid var(--border);
 }
@@ -199,13 +201,13 @@ a {
   list-style: none;
   display: inline-block;
   margin-right: var(--space-3);
+  font-size: var(--size-2-5);
+  letter-spacing: 0.025em;
 }
 
 .navbar a {
   text-decoration: none;
   color: var(--surface);
-  font-weight: 500;
-  letter-spacing: 0.03em;
 }
 
 .navbar a:hover {
@@ -215,8 +217,8 @@ a {
 
 .logo {
   margin-left: var(--space-3);
-  font-size: var(--size-4);
-  font-weight: bold;
+  font-size: var(--size-3-5);
+  font-weight: bolder;
   color: var(--surface);
   letter-spacing: 0.05em;
 }
