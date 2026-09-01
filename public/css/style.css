@@ -185,6 +185,43 @@ a {
   cursor: pointer;
 }
 
+/* navigation bar */
+.navbar {
+  background: var(--brand-primary);
+  padding: var(--space-2-5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar li {
+  list-style: none;
+  display: inline-block;
+  margin-right: var(--space-3);
+}
+
+.navbar a {
+  text-decoration: none;
+  color: var(--surface);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.navbar a:hover {
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.logo {
+  margin-left: var(--space-3);
+  font-size: var(--size-4);
+  font-weight: bold;
+  color: var(--surface);
+  letter-spacing: 0.05em;
+}
+
+
 /* landing */
 .landing-content {
   text-align: left;

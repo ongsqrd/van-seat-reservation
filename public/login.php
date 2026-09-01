@@ -7,6 +7,9 @@
   <title>Login</title>
 </head>
 <body>
+    <?php
+        include '../includes/navbar.php';
+    ?>
     <main>
         <section class="login-section">
         <div class="header-centered">
