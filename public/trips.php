@@ -1,5 +1,11 @@
+<?php
+  require_once '../includes/routes.php';
+
+  $routes = get_routes();
+?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,59 +14,50 @@
 </head>
 
 <body>
-
     <?php
+        $user_role = 'passenger';
+        $user_name = 'Jane Doe';
         include '../includes/navbar.php';
     ?>
 
-    <main class="route-container">
-        <div class="header-route">
-            <h2 class="header-centered">Choose your Route</h2>
-            <p>Where would you like to go today?</p>
+    <main class="routes">
+        <div class="container container-mid">
+
+            <div class="routes-header">
+                <h2>Choose your Route</h2>
+                <p>Where would you like to go today?</p>
+            </div>
+
+            <ul class="route-list">
+                <?php foreach ($routes as $id => $route): ?>
+                    <li>
+                        <a class="route-card"
+                           href="trip-times.php?route=<?= (int) $id ?>">
+
+                            <span class="route-icon">
+                                <?php include '../includes/van-icon.php'; ?>
+                            </span>
+
+                            <span class="route-text">
+                                <span class="route-name"><?= htmlspecialchars($route['name']) ?></span>
+                                <span class="route-detail"><?= htmlspecialchars(route_detail($route)) ?></span>
+                            </span>
+
+                            <span class="route-go">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                     aria-hidden="true" focusable="false">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </span>
+
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
         </div>
-
-        <div class="route-options">
-            <div class="route-card">
-                <div class="van-icon">
-                    <?php include '../includes/van-icon.php'; ?>
-                </div>
-                <div class="route-info">
-                    <h3>Assumption University</h3>
-                    <p>From Bangna to Assumption U.</p>
-                </div>
-            </div>
-
-            <div class="route-card">
-                <div class="van-icon">
-                    <?php include '../includes/van-icon.php'; ?>
-                </div>
-                <div class="route-info">
-                    <h3>Hua Mak Campus</h3>
-                    <p>From Assumption U. to Hua Mak.</p>
-                </div>
-            </div>
-
-            <div class="route-card">
-                <div class="van-icon">
-                    <?php include '../includes/van-icon.php'; ?>
-                </div>
-                <div class="route-info">
-                    <h3>Bangna</h3>
-                    <p>From Assumption U. to Bangna</p>
-                </div>
-            </div>
-
-            <div class="route-card">
-                <div class="van-icon">
-                    <?php include '../includes/van-icon.php'; ?>
-                </div>
-                <div class="route-info">
-                    <h3>Assumption University</h3>
-                    <p>From Hua Mak to Assumption U.</p>
-                </div>
-            </div>
-        </div>
-        
     </main>
 </body>
+
 </html>
