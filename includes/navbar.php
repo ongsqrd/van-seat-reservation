@@ -1,19 +1,38 @@
-<nav class="navbar">
-    <div class="logo">
-        AU VAN
-    </div>
-    <ul class="nav-links">
-        <li>
-            <a href="index.php" class="<?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Home</a>
-        </li>
-        <li>
-            <a href="trips.php" class="<?php echo ($current_page == 'trips.php') ? 'active' : ''; ?>">Book</a>
-        </li>
-        <li>
-            <a href="my-bookings.php" class="<?php echo ($current_page == 'my-bookings.php') ? 'active' : ''; ?>">My Bookings</a>
-        </li>
-        <li>
-            <a href="profile.php" class="<?php echo ($current_page == 'profile.php') ? 'active' : ''; ?>">Profile</a>
-        </li>
-    </ul>
+<?php
+  /* ------------------------------------------------------------
+     Navigation bar — included on every page.
+
+     TEMPORARY: each page sets these two variables before the
+     include. In the PHP phase they come from $_SESSION instead.
+
+       $user_role  'guest' | 'passenger' | 'driver' | 'admin'
+       $user_name  full name, used for the avatar initials
+
+     A guest sees the logo only. Login and register already link
+     to each other inside the form, so the bar stays clean.
+     ------------------------------------------------------------ */
+
+  $user_role = $user_role ?? 'guest';
+  $user_name = $user_name ?? '';
+
+  // "Jane Doe" -> "JD"
+  $initials = '';
+  foreach (preg_split('/\s+/', trim($user_name), -1, PREG_SPLIT_NO_EMPTY) as $part) {
+      $initials .= mb_strtoupper(mb_substr($part, 0, 1));
+  }
+  $initials = mb_substr($initials, 0, 2);
+?>
+<nav class="navbar" aria-label="Main">
+  <div class="navbar-inner">
+
+    <a href="index.php" class="logo">AU VAN</a>
+
+    <?php if ($user_role !== 'guest'): ?>
+      <a href="profile.php" class="avatar"
+         aria-label="<?= htmlspecialchars($user_name) ?> — profile">
+        <?= htmlspecialchars($initials) ?>
+      </a>
+    <?php endif; ?>
+
+  </div>
 </nav>
