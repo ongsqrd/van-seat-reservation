@@ -10,9 +10,9 @@
     <main>
         <?php include '../includes/navbar.php';?>
         <section class="login-section">
-        <div class="header-centered">
-            <h2>Create new Account</h2>
-        </div>
+            <div class="header-centered">
+                <h2>Create new Account</h2>
+            </div>
 
         <div class="login-container login-container-newAcc">
             <form action="register_process.php" method="POST">
