@@ -9,19 +9,30 @@
 </head>
 
 <body>
+    <?php include '../includes/navbar.php';?>
     <main class="landing-content">
-    <h1 class="landing-title">AU VAN<br>BOOKING</h1>
+        <div class="landing-card-wrapper">
+            <div class="landing-card">
+                <h1 class="landing-title">AU VAN<br>BOOKING</h1>
 
-        <p>
-            Welcome to our AU Van booking service.
-            Where would you like to go today? If you are
-            new here, click Join Now to sign up and
-            make an account. 
-        </p>
+                <p>
+                    Welcome to our AU Van booking service.
+                    Where would you like to go today? If you are
+                    new here, click Join Now to sign up and
+                    make an account. 
+                </p>
 
-        <div class="button-container">
-            <button type="button" class="btn-primary">Join now</button>
-            <button type="button" class="btn-primary btn-secondary">Log in</button>
+                <div class="button-container">
+                    <button type="button" class="btn-primary">Join now</button>
+                    <button type="button" class="btn-primary btn-secondary">Log in</button>
+                </div>
+            </div>
+
+            <div class="landing-card">
+                <div class="laptop-mockup">
+                    <?php include('../includes/laptop-mockup.php');?>
+                </div>
+            </div>
         </div>
     </main>
 </body>

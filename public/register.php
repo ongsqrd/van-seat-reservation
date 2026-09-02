@@ -8,6 +8,7 @@
 </head>
 <body>
     <main>
+        <?php include '../includes/navbar.php';?>
         <section class="login-section">
         <div class="header-centered">
             <h2>Create new Account</h2>
