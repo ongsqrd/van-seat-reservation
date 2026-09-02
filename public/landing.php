@@ -29,7 +29,7 @@
             </div>
 
             <div class="landing-card">
-                <div class="laptop-mockup">
+                <div class="laptop-mockup laptop-mockup-align">
                     <?php include('../includes/laptop-mockup.php');?>
                 </div>
             </div>

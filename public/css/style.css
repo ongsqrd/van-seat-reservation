@@ -237,9 +237,9 @@ a {
 
 /* landing */
 .landing-content {
-  max-width: 1100px;
-  margin: 0 auto;
+  max-width: 1200px;
   padding: var(--space-5);
+  margin: var(--space-5);
 }
 
 .landing-title {
@@ -252,8 +252,18 @@ a {
 .landing-card-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  align-items: center;   /* vertically center text against image */
-  gap: var(--space-4);   /* space between the two columns */
+  align-items: center;   
+  gap: var(--space-2);   
+}
+
+.landing-card p {
+  background-color: var(--surface);
+  padding-right: var(--space-6);
+}
+
+.laptop-mockup-align {
+  display: flex;
+  margin-top: var(--space-2-5);
 }
 
 /** trips **/
