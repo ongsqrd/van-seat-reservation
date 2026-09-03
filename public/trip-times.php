@@ -1,5 +1,6 @@
 <?php
   require_once '../includes/routes.php';
+  require_once '../includes/schedule.php';
 
   // which route did we arrive from? bounce back if the id is missing or bogus
   $routeId = isset($_GET['route']) ? (int) $_GET['route'] : 0;
@@ -10,17 +11,8 @@
       exit;
   }
 
-  // --- mutable slot data (later comes from the trips + bookings query) ---
-  $slots = [
-    ['id' => 1, 'time' => '08 : 00 AM', 'capacity' => 14, 'available' => 3 ],
-    ['id' => 2, 'time' => '09 : 00 AM', 'capacity' => 14, 'available' => 10],
-    ['id' => 3, 'time' => '10 : 00 AM', 'capacity' => 14, 'available' => 5 ],
-    ['id' => 4, 'time' => '11 : 00 AM', 'capacity' => 14, 'available' => 7 ],
-    ['id' => 5, 'time' => '12 : 00 PM', 'capacity' => 14, 'available' => 12],
-    ['id' => 6, 'time' => '01 : 30 PM', 'capacity' => 14, 'available' => 12],
-    ['id' => 7, 'time' => '03 : 00 PM', 'capacity' => 14, 'available' => 5 ],
-    ['id' => 8, 'time' => '04 : 30 PM', 'capacity' => 14, 'available' => 0 ],
-  ];
+  $slots    = get_slots();
+  $dropoffs = get_dropoffs();
 
   // two columns, filled top to bottom — the row count follows the data
   $rows = (int) ceil(count($slots) / 2);
@@ -69,10 +61,9 @@
           <div class="field">
             <label class="field-label" for="dropoff">DROP-OFF</label>
             <select class="input" name="dropoff" id="dropoff">
-              <option value="bangna">Bangna</option>
-              <option value="mega-bangna">Mega Bangna</option>
-              <option value="market-village">Market Village</option>
-              <option value="paradise-park">Paradise Park</option>
+              <?php foreach ($dropoffs as $value => $label): ?>
+                <option value="<?= htmlspecialchars($value) ?>"><?= htmlspecialchars($label) ?></option>
+              <?php endforeach; ?>
             </select>
           </div>
 
@@ -91,7 +82,7 @@
           <span class="field-label">DEPARTURE TIME</span>
 
           <div class="depart-list" style="--rows: <?= $rows ?>">
-            <?php foreach ($slots as $slot):
+            <?php foreach ($slots as $slotId => $slot):
               $available = max(0, min($slot['available'], $slot['capacity']));   // clamp into range
               $booked    = $slot['capacity'] - $available;
               $percent   = $slot['capacity'] > 0 ? round($booked / $slot['capacity'] * 100) : 100;
@@ -99,7 +90,7 @@
               $level     = $percent >= 75 ? 'is-low' : ($percent >= 40 ? 'is-med' : 'is-high');
             ?>
               <label class="depart-card <?= $isFull ? 'is-full' : '' ?>">
-                <input type="radio" name="trip_id" value="<?= (int) $slot['id'] ?>"
+                <input type="radio" name="trip_id" value="<?= (int) $slotId ?>"
                        class="depart-radio"
                        <?= $isFull ? 'disabled' : 'required' ?>>
 
