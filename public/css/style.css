@@ -379,6 +379,12 @@ select.input {
   border-color: var(--brand-primary);
 }
 
+.card-title {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
 
 /* ============================================================
    7. PAGE SECTIONS
@@ -843,4 +849,304 @@ select.input {
     grid-template-rows: none;
     grid-auto-flow: row;
   }
+}
+
+
+/* ------------------------------------------------------------
+   7f. BOOKING CONFIRM  (summary + mock payment)
+   ------------------------------------------------------------ */
+.confirm-form {
+  display: grid;
+  row-gap: var(--space-6);
+}
+
+.confirm-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: stretch;         /* all three cards match the tallest */
+  gap: var(--space-5);
+}
+
+/* --- summary --- */
+.summary-route {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.summary-route > div {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.summary-endpoint {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+}
+
+.summary-list {
+  display: grid;
+}
+
+.summary-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  padding: var(--space-3) 0;
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.summary-value {
+  font-weight: var(--weight-medium);
+  text-align: right;
+}
+
+/* --- payment --- */
+.payment {
+  display: grid;
+  align-content: start;         /* stretched card, content still packed at the top */
+  row-gap: var(--space-4);
+}
+
+.payment .card-title {
+  margin-bottom: 0;
+}
+
+.pay-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+}
+
+.pay-rate {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.pay-amount {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--brand-primary);
+}
+
+.pay-note {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* method chips */
+.pay-methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.pay-method {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--control-h-sm);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.pay-method input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pay-method:has(input:checked) {
+  background: var(--brand-tint);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.pay-method:has(input:focus-visible) {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* panels: only the chosen method shows, no JavaScript */
+.pay-panel {
+  display: none;
+  row-gap: var(--space-3);
+}
+
+.confirm-grid:has(.pay-method input[value="promptpay"]:checked) .pay-panel-promptpay,
+.confirm-grid:has(.pay-method input[value="card"]:checked) .pay-panel-card {
+  display: grid;
+}
+
+.pay-panel-title {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+}
+
+.qr-box {
+  display: grid;
+  place-items: center;
+  gap: var(--space-2);
+
+  min-height: 160px;
+  padding: var(--space-4);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.qr-note {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.pay-actions {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.pay-card-line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+/* three columns is a lot of width — step down twice */
+@media (max-width: 1000px) {
+  .confirm-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .pay-detail {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .confirm-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   7g. MODAL  (booking confirmed)
+   Native <dialog>. showModal() supplies the backdrop, focus trap
+   and background inertness, so there is nothing to fake here.
+   ------------------------------------------------------------ */
+.modal {
+  width: 100%;
+  max-width: var(--w-narrow);
+
+  /* a modal dialog is fixed with inset:0, so height must be stated
+     explicitly or it stretches to fill the viewport */
+  inset: 0;
+  height: fit-content;
+  max-height: calc(100vh - var(--space-8));
+  margin: auto;
+
+  padding: var(--space-6);
+
+  border: none;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.modal::backdrop {
+  background: rgb(16 15 13 / 0.5);
+}
+
+/* a closed dialog is display:none, so the layout only applies when open */
+.modal[open] {
+  display: grid;
+  justify-items: center;
+  align-content: start;         /* never spread the rows apart */
+  row-gap: var(--space-3);
+  text-align: center;
+}
+
+.modal-icon {
+  display: grid;
+  place-items: center;
+
+  width: 56px;
+  height: 56px;
+
+  /* margin auto centres it whether the dialog resolves as grid or block,
+     so this does not depend on justify-items landing */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: var(--space-2);
+
+  border-radius: var(--radius-pill);
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.modal-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.modal-title {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+.modal-text {
+  color: var(--text-secondary);
+}
+
+.modal-ref {
+  width: 100%;
+  margin-top: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.modal-ref strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.05em;
+}
+
+.modal-actions {
+  width: 100%;
+  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
 }

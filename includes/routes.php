@@ -12,15 +12,15 @@
 /**
  * All routes, keyed by route id.
  *
- * @return array<int, array{name: string, from: string, to: string}>
+ * @return array<int, array{name: string, from: string, to: string, fare: int}>
  */
 function get_routes(): array
 {
     return [
-        1 => ['name' => 'Assumption University', 'from' => 'Bangna',        'to' => 'Assumption U.'],
-        2 => ['name' => 'Hua Mak Campus',        'from' => 'Assumption U.', 'to' => 'Hua Mak'],
-        3 => ['name' => 'Bangna',                'from' => 'Assumption U.', 'to' => 'Bangna'],
-        4 => ['name' => 'Assumption University', 'from' => 'Hua Mak',       'to' => 'Assumption U.'],
+        1 => ['name' => 'Assumption University', 'from' => 'Bangna',        'to' => 'Assumption U.', 'fare' => 40],
+        2 => ['name' => 'Hua Mak Campus',        'from' => 'Assumption U.', 'to' => 'Hua Mak',       'fare' => 40],
+        3 => ['name' => 'Bangna',                'from' => 'Assumption U.', 'to' => 'Bangna',        'fare' => 40],
+        4 => ['name' => 'Assumption University', 'from' => 'Hua Mak',       'to' => 'Assumption U.', 'fare' => 40],
     ];
 }
 
@@ -40,4 +40,22 @@ function find_route(int $id): ?array
 function route_detail(array $route): string
 {
     return 'From ' . $route['from'] . ' to ' . $route['to'];
+}
+
+/**
+ * Drop-off points, keyed by the value used in the select.
+ *
+ * Flat for now. The stops table has these per route, so this becomes
+ * get_dropoffs(int $routeId) once the data is in.
+ *
+ * @return array<string, string>
+ */
+function get_dropoffs(): array
+{
+    return [
+        'bangna'         => 'Bangna',
+        'mega-bangna'    => 'Mega Bangna',
+        'market-village' => 'Market Village',
+        'paradise-park'  => 'Paradise Park',
+    ];
 }
