@@ -1150,3 +1150,135 @@ select.input {
   display: grid;
   gap: var(--space-3);
 }
+
+/* ------------------------------------------------------------
+   7h. TICKET  (e-ticket / booking details)
+   Left card = booking details. Right card = the QR ticket with
+   its booking id + reference beneath. Both always shown.
+   ------------------------------------------------------------ */
+.ticket {
+  display: grid;
+  row-gap: var(--space-6);
+}
+
+.ticket-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;             /* shorter card sits at the top, not stretched */
+  gap: var(--space-5);
+}
+
+/* --- left: booking details --- */
+.ticket-route {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.ticket-endpoint {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.ticket-endpoint:last-child {
+  text-align: right;
+}
+
+.ticket-endpoint-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.ticket-endpoint-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-medium);
+}
+
+.ticket-list {
+  display: grid;
+}
+
+/* label / value row, shared by the details list and the QR refs */
+.ticket-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  padding: var(--space-3) 0;
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.ticket-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.ticket-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.ticket-value {
+  margin: 0;                      /* a <dd> carries a default inline margin */
+  font-weight: var(--weight-medium);
+  text-align: right;
+}
+
+/* --- right: QR ticket --- */
+.ticket-qr {
+  display: grid;
+  justify-items: center;
+  row-gap: var(--space-3);
+  text-align: center;
+}
+
+.ticket-qr .card-title {
+  margin-bottom: 0;
+}
+
+.ticket-qr-image {
+  display: grid;
+  place-items: center;
+
+  padding: var(--space-3);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.ticket-qr-image img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+
+.ticket-qr-caption {
+  max-width: 28ch;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.ticket-qr-refs {
+  width: 100%;
+  display: grid;
+  text-align: left;               /* rows are flexed; keep labels left-aligned */
+}
+
+/* stack the two cards on narrow screens */
+@media (max-width: 700px) {
+  .ticket-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-endpoint:last-child {
+    text-align: left;
+  }
+}
