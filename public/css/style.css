@@ -1456,3 +1456,148 @@ select.input {
     width: 100%;
   }
 }
+
+
+/* ------------------------------------------------------------
+   7j. PROFILE  (account details / edit)
+   View vs edit is a server-side ?edit state (same idea as
+   trip-times reading ?route), so it stays fully keyboard-
+   accessible with no toggle machinery. container-mid. The
+   summary card is the role-specific slot — it links to this
+   role's home (passenger -> my-bookings).
+   ------------------------------------------------------------ */
+.profile {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+/* --- identity header --- */
+.profile-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-pill);
+
+  background: var(--brand-primary);
+  color: var(--on-primary);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+}
+
+.profile-id {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.profile-name {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+.profile-logout {
+  justify-self: start;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.profile-logout:hover {
+  color: var(--brand-primary);
+}
+
+/* --- label / value rows --- */
+.profile-list {
+  display: grid;
+}
+
+.profile-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  padding: var(--space-3) 0;
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.profile-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.profile-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.profile-value {
+  margin: 0;                      /* a <dd> carries a default inline margin */
+  font-weight: var(--weight-medium);
+  text-align: right;
+}
+
+.profile-security-action {
+  margin-top: var(--space-4);
+}
+
+/* --- summary card: links to the role's home --- */
+.profile-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.profile-summary:hover {
+  border-color: var(--brand-primary);
+}
+
+.profile-summary-text {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.profile-summary-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.profile-summary-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.profile-summary-go {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  color: var(--text-muted);
+}
+
+.profile-summary-go svg {
+  width: 20px;
+  height: 20px;
+}
+
+.profile-summary:hover .profile-summary-go {
+  color: var(--brand-primary);
+}
+
+/* --- edit form --- */
+.profile-form {
+  display: grid;
+  row-gap: var(--space-5);
+}
