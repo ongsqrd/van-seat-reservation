@@ -1,9 +1,13 @@
 <?php
 /**
- * includes/driver-trips.php
+ * includes/driver-today.php
  *
  * Placeholder for the logged-in driver's assigned trips today. Stands in
  * the way routes.php / bookings.php do until the trips table exists.
+ *
+ * Named driver-today (not driver-trips) on purpose: driver-trip.php is a
+ * page in pages.md (trip details + manifest), and a near-identical include
+ * name invites exactly the singular/plural mix-up that breaks requires.
  *
  * Each trip references a route by id, so From/To resolve through
  * find_route() and can't drift. 'boarded' is how many of 'capacity'
