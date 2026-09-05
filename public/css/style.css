@@ -1601,3 +1601,68 @@ select.input {
   display: grid;
   row-gap: var(--space-5);
 }
+
+
+/* ------------------------------------------------------------
+   7k. BOOKING SUCCESS  (booking-success)
+   The no-JS fallback the confirm form posts to, mirroring the
+   confirmed dialog. Centred in the viewport like the auth and
+   landing pages (its own min-height, not .page).
+   ------------------------------------------------------------ */
+.success-page {
+  min-height: calc(100vh - var(--navbar-h));
+  padding-top: var(--space-7);
+  padding-bottom: var(--space-7);
+
+  display: grid;
+  align-content: center;
+}
+
+.success {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  row-gap: var(--space-4);
+}
+
+.success-check {
+  display: grid;
+  place-items: center;
+
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-tint);
+  color: var(--brand-primary);
+}
+
+.success-check svg {
+  width: 36px;
+  height: 36px;
+}
+
+.success-message {
+  color: var(--text-secondary);
+}
+
+.success-id {
+  padding: var(--space-2) var(--space-4);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.success-id strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+}
+
+.success-actions {
+  width: 100%;
+  margin-top: var(--space-3);
+  display: grid;
+  row-gap: var(--space-3);
+}
