@@ -21,6 +21,14 @@
       $initials .= mb_strtoupper(mb_substr($part, 0, 1));
   }
   $initials = mb_substr($initials, 0, 2);
+
+  // the avatar links to the profile for this role
+  $profile_pages = [
+      'passenger' => 'profile.php',
+      'driver'    => 'driver-profile.php',
+      'admin'     => 'admin-profile.php',
+  ];
+  $profile_page = $profile_pages[$user_role] ?? 'profile.php';
 ?>
 <nav class="navbar" aria-label="Main">
   <div class="navbar-inner">
@@ -28,7 +36,7 @@
     <a href="index.php" class="logo">AU VAN</a>
 
     <?php if ($user_role !== 'guest'): ?>
-      <a href="profile.php" class="avatar"
+      <a href="<?= htmlspecialchars($profile_page) ?>" class="avatar"
          aria-label="<?= htmlspecialchars($user_name) ?> — profile">
         <?= htmlspecialchars($initials) ?>
       </a>
