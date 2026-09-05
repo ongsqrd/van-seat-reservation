@@ -1282,3 +1282,177 @@ select.input {
     text-align: left;
   }
 }
+
+
+/* ------------------------------------------------------------
+   7i. BOOKING HISTORY  (my-bookings)
+   Upcoming / Completed tabs via hidden radios + :has(), same
+   idiom as the payment chips. Each card links to its ticket.
+   No JavaScript.
+   ------------------------------------------------------------ */
+.bookings {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.bookings-header {
+  text-align: center;
+}
+
+/* --- tabs --- */
+.bookings-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.bookings-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--control-h-sm);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.bookings-tab:hover {
+  border-color: var(--brand-primary);
+}
+
+.bookings-tab input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bookings-tab:has(input:checked) {
+  background: var(--brand-tint);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  font-weight: var(--weight-semibold);
+}
+
+.bookings-tab:has(input:focus-visible) {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* --- panels: only the active tab's list shows --- */
+.bookings-panel {
+  display: none;
+}
+
+.bookings:has(.bookings-tab input[value="upcoming"]:checked) .bookings-panel-upcoming,
+.bookings:has(.bookings-tab input[value="completed"]:checked) .bookings-panel-completed {
+  display: grid;
+}
+
+/* --- list + card --- */
+.booking-list {
+  display: grid;
+  row-gap: var(--space-3);
+}
+
+.booking-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.booking-info {
+  display: grid;
+  row-gap: var(--space-2);
+}
+
+.booking-route {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.booking-endpoint {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.booking-label {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+
+.booking-place {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+.booking-sep {
+  display: flex;
+  color: var(--text-muted);
+}
+
+.booking-sep svg {
+  width: 18px;
+  height: 18px;
+}
+
+.booking-meta {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.booking-meta-label {
+  margin-right: var(--space-2);
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.booking-ref {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.booking-ref strong {
+  color: var(--text-primary);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+}
+
+.booking-card .btn {
+  flex-shrink: 0;
+}
+
+.bookings-empty {
+  padding: var(--space-6);
+  text-align: center;
+  color: var(--text-secondary);
+  border: var(--border-w) dashed var(--border);
+  border-radius: var(--radius);
+}
+
+/* stack card contents on narrow screens */
+@media (max-width: 700px) {
+  .booking-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .booking-card .btn {
+    width: 100%;
+  }
+}
