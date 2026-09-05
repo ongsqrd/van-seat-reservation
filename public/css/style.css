@@ -1782,3 +1782,171 @@ select.input {
     width: 100%;
   }
 }
+
+
+/* ------------------------------------------------------------
+   7m. DRIVER TRIP  (driver-trip — details + manifest)
+   Reached from the dashboard's View Details. Trip header, seat
+   stats, the passenger manifest table, and Start Check-in.
+   Distinct .trip-detail-* names so nothing clashes with
+   trip-times' .trip-* classes. container (720).
+   ------------------------------------------------------------ */
+.trip-detail {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.trip-detail-back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.trip-detail-back:hover {
+  color: var(--brand-primary);
+}
+
+.trip-detail-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* --- head: route + date --- */
+.trip-detail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+
+  padding-bottom: var(--space-4);
+  margin-bottom: var(--space-4);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.trip-detail-route {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.trip-detail-place {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+}
+
+.trip-detail-arrow {
+  display: flex;
+  color: var(--text-muted);
+}
+
+.trip-detail-arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+.trip-detail-date {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* --- stats --- */
+.trip-detail-stats {
+  display: flex;
+  gap: var(--space-7);
+  margin-bottom: var(--space-5);
+}
+
+.trip-detail-stat {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.trip-detail-stat-label {
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.trip-detail-stat-value {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+/* --- manifest --- */
+.trip-detail-manifest-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.trip-detail-manifest-head .card-title {
+  margin-bottom: 0;
+}
+
+.trip-detail-count {
+  flex-shrink: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.manifest {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.manifest th {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.manifest td {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.manifest tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.manifest-passenger {
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.manifest-status {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+}
+
+.manifest-status.is-boarded {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.manifest-status.is-waiting {
+  background: var(--yellow-bg);
+  color: var(--text-primary);
+}
