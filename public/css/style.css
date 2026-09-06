@@ -1948,5 +1948,742 @@ select.input {
 
 .manifest-status.is-waiting {
   background: var(--yellow-bg);
+  color: var(--yellow);
+}
+
+
+/* ------------------------------------------------------------
+   7n. DRIVER CHECK-IN  (driver-checkin — mock scan + manual)
+   Two columns: scanner mock + manual booking-ref entry on the
+   left, boarded progress + Recently Boarded feed on the right.
+   Real scanning is out of scope, so the frame is decorative.
+   Reuses .manifest-status (7m) for the Boarded chip. container.
+   ------------------------------------------------------------ */
+.checkin {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.checkin-back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.checkin-back:hover {
+  color: var(--brand-primary);
+}
+
+.checkin-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.checkin-head {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.checkin-sub {
+  color: var(--text-secondary);
+}
+
+.checkin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--space-5);
+}
+
+.checkin-main,
+.checkin-side {
+  display: grid;
+  row-gap: var(--space-5);
+  align-content: start;
+}
+
+/* --- scanner mock --- */
+.checkin-scan {
+  display: grid;
+  justify-items: center;
+  row-gap: var(--space-3);
+  text-align: center;
+}
+
+.checkin-scan-frame {
+  display: grid;
+  place-items: center;
+
+  width: 160px;
+  height: 160px;
+  border-radius: var(--radius);
+  background: var(--brand-tint);
+  color: var(--brand-primary);
+}
+
+.checkin-scan-frame svg {
+  width: 48px;
+  height: 48px;
+}
+
+.checkin-scan-caption {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* --- manual entry --- */
+.checkin-manual {
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+/* --- boarded progress --- */
+.checkin-progress {
+  display: grid;
+  justify-items: center;
+  row-gap: var(--space-2);
+  text-align: center;
+}
+
+.checkin-progress-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+.checkin-progress-label {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.checkin-bar {
+  width: 100%;
+  margin-top: var(--space-2);
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-alt);
+  overflow: hidden;
+}
+
+.checkin-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--green);
+}
+
+/* --- recently boarded --- */
+.checkin-recent-list {
+  display: grid;
+  row-gap: var(--space-3);
+}
+
+.checkin-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  padding: var(--space-3) 0;
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.checkin-recent-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.checkin-recent-info {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.checkin-recent-name {
+  font-weight: var(--weight-medium);
+}
+
+.checkin-recent-meta {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* stack the two columns on narrow screens */
+@media (max-width: 700px) {
+  .checkin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   7o. ADMIN DASHBOARD  (admin-dashboard — hub)
+   Heading + date, a blocking alert when trips lack a driver,
+   KPI stat cards, and two action cards routing to the admin
+   sub-pages. container (720).
+   ------------------------------------------------------------ */
+.admin-dash {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.admin-dash-head {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-dash-date {
+  color: var(--text-secondary);
+}
+
+/* --- alert: trips need a driver (brand = blocking) --- */
+.admin-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-w) solid var(--brand-primary);
+  border-radius: var(--radius);
+  background: var(--brand-tint);
+
   color: var(--text-primary);
+  text-decoration: none;
+}
+
+.admin-alert-icon {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--brand-primary);
+}
+
+.admin-alert-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.admin-alert-body {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-alert-title {
+  font-weight: var(--weight-semibold);
+  color: var(--brand-primary);
+}
+
+.admin-alert-text {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.admin-alert-go {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  color: var(--brand-primary);
+}
+
+.admin-alert-go svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* --- KPI stats --- */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.admin-stat {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+.admin-stat-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* --- action cards --- */
+.admin-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.admin-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.admin-action:hover {
+  border-color: var(--brand-primary);
+}
+
+.admin-action-body {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-action-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.admin-action-text {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.admin-action-go {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  color: var(--text-muted);
+}
+
+.admin-action-go svg {
+  width: 20px;
+  height: 20px;
+}
+
+.admin-action:hover .admin-action-go {
+  color: var(--brand-primary);
+}
+
+/* stack on narrow screens */
+@media (max-width: 700px) {
+  .admin-stats,
+  .admin-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   7p. ADMIN MANAGE  (admin-manage — vans/routes/stops/users)
+   Four tabs via hidden radios + :has() (same idiom as booking
+   history). Server sets the open tab from ?tab so the dashboard
+   can deep-link. Each panel: a head (count or filters), a data
+   table, and — where the mockup has one — an inline add row.
+   container (720).
+   ------------------------------------------------------------ */
+.manage {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+/* --- tabs --- */
+.manage-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.manage-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--control-h-sm);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.manage-tab:hover {
+  border-color: var(--brand-primary);
+}
+
+.manage-tab input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.manage-tab:has(input:checked) {
+  background: var(--brand-tint);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  font-weight: var(--weight-semibold);
+}
+
+.manage-tab:has(input:focus-visible) {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* --- panels: only the active tab shows --- */
+.manage-panel {
+  display: none;
+}
+
+.manage:has(.manage-tab input[value="vans"]:checked)   .manage-panel-vans,
+.manage:has(.manage-tab input[value="routes"]:checked) .manage-panel-routes,
+.manage:has(.manage-tab input[value="stops"]:checked)  .manage-panel-stops,
+.manage:has(.manage-tab input[value="users"]:checked)  .manage-panel-users {
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+.manage-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.manage-count {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* stops: route selector */
+.manage-stops-route {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.manage-stops-route .field-label {
+  margin: 0;
+}
+
+.manage-stops-route .input {
+  min-width: 200px;
+}
+
+/* users: search + role filter */
+.manage-filters {
+  display: flex;
+  gap: var(--space-3);
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.manage-filters .input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.manage-filters .manage-role-filter {
+  flex: 0 0 auto;
+  min-width: 140px;
+}
+
+/* --- data table --- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.data-table td {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  border-bottom: var(--border-w) solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-strong {
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.data-order-col {
+  width: 1%;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.data-edit-col {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.data-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  border: var(--border-w) solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.data-edit:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.data-edit svg {
+  width: 16px;
+  height: 16px;
+}
+
+.data-role {
+  display: inline-flex;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  background: var(--surface-alt);
+}
+
+/* --- inline add row --- */
+.manage-add {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.manage-add .input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.manage-add .manage-add-num {
+  flex: 0 0 96px;
+  min-width: 0;
+}
+
+.manage-add .btn {
+  flex-shrink: 0;
+}
+
+/* narrow screens: two tab columns */
+@media (max-width: 700px) {
+  .manage-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* ------------------------------------------------------------
+   7q. ADMIN TRIPS  (admin-trips — list + create + assign popup)
+   Reuses .data-table (7p). New Trip form toggles via ?new; the
+   assign-driver popup is a server-rendered overlay via ?assign,
+   reusing the .modal backdrop value so it matches the dialog.
+   container (720).
+   ------------------------------------------------------------ */
+.trips-admin {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.trips-admin-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.trips-admin-count {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* Unassigned reads as the actionable state */
+.trip-unassigned {
+  font-weight: var(--weight-medium);
+  color: var(--brand-primary);
+}
+
+/* --- create form --- */
+.trip-create {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.trip-create-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.trip-create-driver {
+  grid-column: 1 / -1;
+}
+
+/* --- assign-driver overlay --- */
+.trip-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+
+  background: rgb(16 15 13 / 0.5);   /* same as .modal::backdrop */
+}
+
+.trip-overlay-card {
+  width: 100%;
+  max-width: var(--w-mid);
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+.trip-overlay-head {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.trip-overlay-head .card-title {
+  margin-bottom: 0;
+}
+
+.trip-overlay-sub {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.trip-drivers {
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+.trip-drivers-group {
+  display: grid;
+  row-gap: var(--space-2);
+}
+
+.trip-drivers-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.trip-drivers-list {
+  display: grid;
+  row-gap: var(--space-2);
+}
+
+.trip-driver {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  padding: var(--space-3);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.trip-driver input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+label.trip-driver:has(input:checked) {
+  border-color: var(--brand-primary);
+  background: var(--brand-tint);
+}
+
+label.trip-driver:has(input:focus-visible) {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.trip-driver.is-disabled {
+  cursor: not-allowed;
+  background: var(--surface-alt);
+  opacity: 0.6;
+}
+
+.trip-driver-name {
+  font-weight: var(--weight-medium);
+}
+
+.trip-driver-status {
+  margin-left: auto;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+}
+
+.trip-driver-status.is-free {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.trip-driver-status.is-busy {
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+}
+
+.trip-overlay-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* narrow screens */
+@media (max-width: 700px) {
+  .trip-create-grid {
+    grid-template-columns: 1fr;
+  }
 }
