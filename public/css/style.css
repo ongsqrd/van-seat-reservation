@@ -2276,3 +2276,233 @@ select.input {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ------------------------------------------------------------
+   7p. ADMIN MANAGE  (admin-manage — vans/routes/stops/users)
+   Four tabs via hidden radios + :has() (same idiom as booking
+   history). Server sets the open tab from ?tab so the dashboard
+   can deep-link. Each panel: a head (count or filters), a data
+   table, and — where the mockup has one — an inline add row.
+   container (720).
+   ------------------------------------------------------------ */
+.manage {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+/* --- tabs --- */
+.manage-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+}
+
+.manage-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: var(--control-h-sm);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.manage-tab:hover {
+  border-color: var(--brand-primary);
+}
+
+.manage-tab input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.manage-tab:has(input:checked) {
+  background: var(--brand-tint);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  font-weight: var(--weight-semibold);
+}
+
+.manage-tab:has(input:focus-visible) {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* --- panels: only the active tab shows --- */
+.manage-panel {
+  display: none;
+}
+
+.manage:has(.manage-tab input[value="vans"]:checked)   .manage-panel-vans,
+.manage:has(.manage-tab input[value="routes"]:checked) .manage-panel-routes,
+.manage:has(.manage-tab input[value="stops"]:checked)  .manage-panel-stops,
+.manage:has(.manage-tab input[value="users"]:checked)  .manage-panel-users {
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+.manage-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.manage-count {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* stops: route selector */
+.manage-stops-route {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.manage-stops-route .field-label {
+  margin: 0;
+}
+
+.manage-stops-route .input {
+  min-width: 200px;
+}
+
+/* users: search + role filter */
+.manage-filters {
+  display: flex;
+  gap: var(--space-3);
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.manage-filters .input {
+  flex: 1;
+  min-width: 160px;
+}
+
+.manage-filters .manage-role-filter {
+  flex: 0 0 auto;
+  min-width: 140px;
+}
+
+/* --- data table --- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.data-table td {
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  border-bottom: var(--border-w) solid var(--border);
+  vertical-align: middle;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-strong {
+  font-weight: var(--weight-medium);
+  color: var(--text-primary);
+}
+
+.data-order-col {
+  width: 1%;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+
+.data-edit-col {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.data-edit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  border: var(--border-w) solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.data-edit:hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.data-edit svg {
+  width: 16px;
+  height: 16px;
+}
+
+.data-role {
+  display: inline-flex;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--text-secondary);
+  background: var(--surface-alt);
+}
+
+/* --- inline add row --- */
+.manage-add {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.manage-add .input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.manage-add .manage-add-num {
+  flex: 0 0 96px;
+  min-width: 0;
+}
+
+.manage-add .btn {
+  flex-shrink: 0;
+}
+
+/* narrow screens: two tab columns */
+@media (max-width: 700px) {
+  .manage-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
