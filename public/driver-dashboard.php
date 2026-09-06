@@ -10,23 +10,12 @@
   {
       return $status === 'next' ? 'Next Trip' : 'Upcoming';
   }
+
+  $page_title = 'AU VAN - Dashboard';
+  $user_role  = 'driver';
+  $user_name  = 'John Doe';
+  include '../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU VAN - Dashboard</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-  <?php
-    $user_role = 'driver';
-    $user_name = 'John Doe';
-    include '../includes/navbar.php';
-  ?>
 
   <main class="page">
     <div class="container container-mid">
@@ -80,6 +69,5 @@
 
     </div>
   </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>

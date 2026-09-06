@@ -33,23 +33,12 @@
            . '<path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path>'
            . '</svg></button>';
   }
+
+  $page_title = 'AU VAN - Manage';
+  $user_role  = 'admin';
+  $user_name  = 'Chanyapat Saeng-Xuto';
+  include '../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU VAN - Manage</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-  <?php
-    $user_role = 'admin';
-    $user_name = 'Chanyapat Saeng-Xuto';
-    include '../includes/navbar.php';
-  ?>
 
   <main class="page">
     <div class="container">
@@ -202,6 +191,5 @@
 
     </div>
   </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>

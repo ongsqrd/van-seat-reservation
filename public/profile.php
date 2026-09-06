@@ -27,24 +27,11 @@
 
   $self    = 'profile.php';
   $editing = isset($_GET['edit']);
+
+  $page_title = 'AU VAN - Passenger';
+  $user_role  = 'passenger';
+  $user_name  = $profile['name'];
+  include '../includes/header.php';
+  include '../includes/profile-shell.php';
+  include '../includes/footer.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU VAN - Passenger</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-  <?php
-    $user_role = 'passenger';
-    $user_name = $profile['name'];
-    include '../includes/navbar.php';
-    include '../includes/profile-shell.php';
-  ?>
-</body>
-
-</html>

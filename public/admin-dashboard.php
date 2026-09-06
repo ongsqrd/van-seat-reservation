@@ -13,23 +13,12 @@
   ];
 
   $unassigned = 2;                 // trips with no driver assigned yet
+
+  $page_title = 'AU VAN - Dashboard';
+  $user_role  = 'admin';
+  $user_name  = 'Chanyapat Saeng-Xuto';
+  include '../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU VAN - Dashboard</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-  <?php
-    $user_role = 'admin';
-    $user_name = 'Chanyapat Saeng-Xuto';
-    include '../includes/navbar.php';
-  ?>
 
   <main class="page">
     <div class="container">
@@ -111,6 +100,5 @@
 
     </div>
   </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>
