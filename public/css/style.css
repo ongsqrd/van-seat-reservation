@@ -2506,3 +2506,184 @@ select.input {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+
+/* ------------------------------------------------------------
+   7q. ADMIN TRIPS  (admin-trips — list + create + assign popup)
+   Reuses .data-table (7p). New Trip form toggles via ?new; the
+   assign-driver popup is a server-rendered overlay via ?assign,
+   reusing the .modal backdrop value so it matches the dialog.
+   container (720).
+   ------------------------------------------------------------ */
+.trips-admin {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.trips-admin-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.trips-admin-count {
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* Unassigned reads as the actionable state */
+.trip-unassigned {
+  font-weight: var(--weight-medium);
+  color: var(--brand-primary);
+}
+
+/* --- create form --- */
+.trip-create {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.trip-create-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.trip-create-driver {
+  grid-column: 1 / -1;
+}
+
+/* --- assign-driver overlay --- */
+.trip-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+
+  background: rgb(16 15 13 / 0.5);   /* same as .modal::backdrop */
+}
+
+.trip-overlay-card {
+  width: 100%;
+  max-width: var(--w-mid);
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+.trip-overlay-head {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.trip-overlay-head .card-title {
+  margin-bottom: 0;
+}
+
+.trip-overlay-sub {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.trip-drivers {
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+.trip-drivers-group {
+  display: grid;
+  row-gap: var(--space-2);
+}
+
+.trip-drivers-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.trip-drivers-list {
+  display: grid;
+  row-gap: var(--space-2);
+}
+
+.trip-driver {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  padding: var(--space-3);
+  border: var(--border-w) solid var(--border);
+  border-radius: var(--radius);
+
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.trip-driver input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+label.trip-driver:has(input:checked) {
+  border-color: var(--brand-primary);
+  background: var(--brand-tint);
+}
+
+label.trip-driver:has(input:focus-visible) {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+.trip-driver.is-disabled {
+  cursor: not-allowed;
+  background: var(--surface-alt);
+  opacity: 0.6;
+}
+
+.trip-driver-name {
+  font-weight: var(--weight-medium);
+}
+
+.trip-driver-status {
+  margin-left: auto;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.03em;
+}
+
+.trip-driver-status.is-free {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.trip-driver-status.is-busy {
+  background: var(--surface-alt);
+  color: var(--text-secondary);
+}
+
+.trip-overlay-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}
+
+/* narrow screens */
+@media (max-width: 700px) {
+  .trip-create-grid {
+    grid-template-columns: 1fr;
+  }
+}
