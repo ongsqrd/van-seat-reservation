@@ -2119,3 +2119,160 @@ select.input {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ------------------------------------------------------------
+   7o. ADMIN DASHBOARD  (admin-dashboard — hub)
+   Heading + date, a blocking alert when trips lack a driver,
+   KPI stat cards, and two action cards routing to the admin
+   sub-pages. container (720).
+   ------------------------------------------------------------ */
+.admin-dash {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.admin-dash-head {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-dash-date {
+  color: var(--text-secondary);
+}
+
+/* --- alert: trips need a driver (brand = blocking) --- */
+.admin-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  padding: var(--space-4) var(--space-5);
+  border: var(--border-w) solid var(--brand-primary);
+  border-radius: var(--radius);
+  background: var(--brand-tint);
+
+  color: var(--text-primary);
+  text-decoration: none;
+}
+
+.admin-alert-icon {
+  flex-shrink: 0;
+  display: flex;
+  color: var(--brand-primary);
+}
+
+.admin-alert-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.admin-alert-body {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-alert-title {
+  font-weight: var(--weight-semibold);
+  color: var(--brand-primary);
+}
+
+.admin-alert-text {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.admin-alert-go {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  color: var(--brand-primary);
+}
+
+.admin-alert-go svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* --- KPI stats --- */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+
+.admin-stat {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-stat-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+.admin-stat-label {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* --- action cards --- */
+.admin-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.admin-action {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.admin-action:hover {
+  border-color: var(--brand-primary);
+}
+
+.admin-action-body {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.admin-action-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+}
+
+.admin-action-text {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.admin-action-go {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  color: var(--text-muted);
+}
+
+.admin-action-go svg {
+  width: 20px;
+  height: 20px;
+}
+
+.admin-action:hover .admin-action-go {
+  color: var(--brand-primary);
+}
+
+/* stack on narrow screens */
+@media (max-width: 700px) {
+  .admin-stats,
+  .admin-actions {
+    grid-template-columns: 1fr;
+  }
+}
