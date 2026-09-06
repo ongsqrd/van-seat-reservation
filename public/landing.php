@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+  $page_title = 'AU Van — Book a university van seat';
+  $user_role  = 'guest';
+  include '../includes/header.php';
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AU Van — Book a university van seat</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-    <?php
-        $user_role = 'guest';
-        include '../includes/navbar.php';
-    ?>
-
-    <main class="container container-wide landing">
+  <main class="container container-wide landing">
 
         <div class="landing-copy">
             <h1 class="landing-title">AU VAN<br>BOOKING</h1>
@@ -37,6 +27,5 @@
         </div>
 
     </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>

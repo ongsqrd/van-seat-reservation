@@ -13,23 +13,12 @@
    * For now the id is a placeholder, matching the mockup.
    */
   $booking_id = 'QWSE-00012';
+
+  $page_title = 'AU VAN - Confirmed';
+  $user_role  = 'passenger';
+  $user_name  = 'Jane Doe';
+  include '../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU VAN - Confirmed</title>
-  <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-  <?php
-    $user_role = 'passenger';
-    $user_name = 'Jane Doe';
-    include '../includes/navbar.php';
-  ?>
 
   <main class="success-page">
     <div class="container container-narrow">
@@ -58,6 +47,5 @@
 
     </div>
   </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>

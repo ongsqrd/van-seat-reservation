@@ -30,24 +30,13 @@
   $date = '10 May 2026';
 
   $passengerName = 'Jane Doe';
+
+  $page_title = 'AU VAN - Booking';
+  $user_role  = 'passenger';
+  $user_name  = $passengerName;
+  $page_script = 'booking-confirm.js';
+  include '../includes/header.php';
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AU VAN - Booking</title>
-  <link rel="stylesheet" href="css/style.css">
-  <script src="js/booking-confirm.js" defer></script>
-</head>
-
-<body>
-  <?php
-    $user_role = 'passenger';
-    $user_name = $passengerName;
-    include '../includes/navbar.php';
-  ?>
 
   <dialog class="modal" id="bookingConfirmed" aria-labelledby="confirmedTitle">
     <div class="modal-card">
@@ -217,6 +206,5 @@
 
     </div>
   </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>

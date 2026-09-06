@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+  $page_title = 'AU Van — Login';
+  $user_role  = 'guest';
+  include '../includes/header.php';
+?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AU Van — Login</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-
-<body>
-    <?php
-        $user_role = 'guest';
-        include '../includes/navbar.php';
-    ?>
-
-    <main class="auth">
+  <main class="auth">
         <div class="container container-narrow">
 
             <h2 class="auth-title">Welcome Back!</h2>
@@ -43,6 +33,5 @@
 
         </div>
     </main>
-</body>
 
-</html>
+<?php include '../includes/footer.php'; ?>
