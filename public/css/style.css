@@ -1948,5 +1948,174 @@ select.input {
 
 .manifest-status.is-waiting {
   background: var(--yellow-bg);
-  color: var(--text-primary);
+  color: var(--yellow);
+}
+
+
+/* ------------------------------------------------------------
+   7n. DRIVER CHECK-IN  (driver-checkin — mock scan + manual)
+   Two columns: scanner mock + manual booking-ref entry on the
+   left, boarded progress + Recently Boarded feed on the right.
+   Real scanning is out of scope, so the frame is decorative.
+   Reuses .manifest-status (7m) for the Boarded chip. container.
+   ------------------------------------------------------------ */
+.checkin {
+  display: grid;
+  row-gap: var(--space-5);
+}
+
+.checkin-back {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.checkin-back:hover {
+  color: var(--brand-primary);
+}
+
+.checkin-back svg {
+  width: 16px;
+  height: 16px;
+}
+
+.checkin-head {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.checkin-sub {
+  color: var(--text-secondary);
+}
+
+.checkin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--space-5);
+}
+
+.checkin-main,
+.checkin-side {
+  display: grid;
+  row-gap: var(--space-5);
+  align-content: start;
+}
+
+/* --- scanner mock --- */
+.checkin-scan {
+  display: grid;
+  justify-items: center;
+  row-gap: var(--space-3);
+  text-align: center;
+}
+
+.checkin-scan-frame {
+  display: grid;
+  place-items: center;
+
+  width: 160px;
+  height: 160px;
+  border-radius: var(--radius);
+  background: var(--brand-tint);
+  color: var(--brand-primary);
+}
+
+.checkin-scan-frame svg {
+  width: 48px;
+  height: 48px;
+}
+
+.checkin-scan-caption {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* --- manual entry --- */
+.checkin-manual {
+  display: grid;
+  row-gap: var(--space-4);
+}
+
+/* --- boarded progress --- */
+.checkin-progress {
+  display: grid;
+  justify-items: center;
+  row-gap: var(--space-2);
+  text-align: center;
+}
+
+.checkin-progress-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+}
+
+.checkin-progress-label {
+  font-size: var(--text-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.checkin-bar {
+  width: 100%;
+  margin-top: var(--space-2);
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-alt);
+  overflow: hidden;
+}
+
+.checkin-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--green);
+}
+
+/* --- recently boarded --- */
+.checkin-recent-list {
+  display: grid;
+  row-gap: var(--space-3);
+}
+
+.checkin-recent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+
+  padding: var(--space-3) 0;
+  border-bottom: var(--border-w) solid var(--border);
+}
+
+.checkin-recent-item:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.checkin-recent-info {
+  display: grid;
+  row-gap: var(--space-1);
+}
+
+.checkin-recent-name {
+  font-weight: var(--weight-medium);
+}
+
+.checkin-recent-meta {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* stack the two columns on narrow screens */
+@media (max-width: 700px) {
+  .checkin-grid {
+    grid-template-columns: 1fr;
+  }
 }
