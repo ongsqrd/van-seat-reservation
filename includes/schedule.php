@@ -64,6 +64,8 @@ function find_slot(int $id): ?array
 {
     $stmt = db()->prepare("
         SELECT
+            t.route_id,
+            DATE_FORMAT(t.trip_date,   '%e %b %Y')   AS date,
             DATE_FORMAT(t.depart_time, '%h : %i %p') AS time,
             v.seats AS capacity,
             v.seats - COALESCE(
@@ -81,6 +83,8 @@ function find_slot(int $id): ?array
         return null;
     }
     return [
+        'route_id'  => (int) $row['route_id'],   // added so callers can confirm a trip really belongs to the route it's posted with
+        'date'      => $row['date'],
         'time'      => $row['time'],
         'capacity'  => (int) $row['capacity'],
         'available' => (int) $row['available'],

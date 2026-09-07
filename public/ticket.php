@@ -1,38 +1,36 @@
 <?php
   require_once '../includes/routes.php';
-  require_once '../includes/schedule.php';
+  require_once '../includes/bookings.php';
   require_once '../includes/auth.php';
 
   $user = require_role('passenger');
 
-  /* ------------------------------------------------------------------
-     Placeholder booking.
-     No bookings table exists yet, so a ticket's data is faked here to
-     match the Canva mockup — the same posture as the hardcoded $date in
-     booking-confirm. When the DB lands this becomes a lookup by id
-     (ticket.php?booking=... -> SELECT ...), and route + slot come from
-     the stored trip, exactly as trip-times reads them today.
-     ------------------------------------------------------------------ */
+  // which booking? my-bookings.php links here as ?booking=<reference>
+  $reference = $_GET['booking'] ?? null;
+  $found     = $reference !== null ? find_booking($reference) : null;
+
+  // no such booking, or it exists but isn't this passenger's — nothing to
+  // show, so send them back to their own list rather than error
+  if ($found === null || $found['user_id'] !== $user['id']) {
+      header('Location: my-bookings.php');
+      exit;
+  }
+
+  $route = find_route($found['route_id']);
+
   $booking = [
-    'route_id'   => 1,                // -> find_route(): FROM / TO + fare
-    'trip_id'    => 1,                // -> find_slot():  boarding time
-    'date'       => '10 May 2026',
-    'dropoff'    => 'Bangna Junction',
-    'booking_id' => '2601134001',
-    'reference'  => 'F134WD24A',
-    'passenger'  => $user['name'],   // real name; rest of the ticket is still placeholder
-    'plate'      => 'กข 1234',
-    'seats'      => 3,
-    'booked_at'  => '10 May 2026  08:12 AM',
+    'date'       => $found['date'],
+    'dropoff'    => $found['dropoff'],
+    'booking_id' => (string) $found['booking_id'],
+    'reference'  => $found['reference'],
+    'passenger'  => $found['passenger'],
+    'plate'      => $found['plate'],
+    'seats'      => $found['seats'],
+    'booked_at'  => $found['booked_at'],
   ];
 
-  $route = find_route($booking['route_id']);
-  $slot  = find_slot($booking['trip_id']);
-
-  // fare lives on the route, so the total can't drift from seats x fare
-  $fare     = $route['fare'] ?? 40;
-  $total    = $fare * (int) $booking['seats'];
-  $boarding = $slot['time'] ?? '';
+  $boarding = $found['boarding'];
+  $total    = $found['total'];   // stored at booking time — the historical total, not recomputed from today's fare
 
   $page_title = 'AU VAN - Ticket';
   $user_role  = 'passenger';
