@@ -18,8 +18,14 @@ require_once __DIR__ . '/db.php';
 
 function get_bookings(): array
 {
-    $userId    = 1;              // TODO: $_SESSION['user_id']
+    // require_role() (called by every page before this) has already
+    // started the session and confirmed a passenger is logged in.
+    $userId    = $_SESSION['user_id'] ?? null;
     $todayDate = '2026-05-10';   // TODO: date('Y-m-d')
+
+    if ($userId === null) {
+        return [];   // defensive — should never happen behind require_role()
+    }
 
     $stmt = db()->prepare("
         SELECT

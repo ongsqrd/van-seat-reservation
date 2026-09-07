@@ -12,11 +12,14 @@
    * real id — which fixes the reload-resubmits-the-booking problem.
    * For now the id is a placeholder, matching the mockup.
    */
+  require_once '../includes/auth.php';
+  $user = require_role('passenger');
+
   $booking_id = 'QWSE-00012';
 
   $page_title = 'AU VAN - Confirmed';
   $user_role  = 'passenger';
-  $user_name  = 'Jane Doe';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

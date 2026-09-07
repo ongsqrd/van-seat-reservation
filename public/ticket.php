@@ -1,6 +1,9 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/schedule.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   /* ------------------------------------------------------------------
      Placeholder booking.
@@ -17,7 +20,7 @@
     'dropoff'    => 'Bangna Junction',
     'booking_id' => '2601134001',
     'reference'  => 'F134WD24A',
-    'passenger'  => 'Jane Doe',
+    'passenger'  => $user['name'],   // real name; rest of the ticket is still placeholder
     'plate'      => 'กข 1234',
     'seats'      => 3,
     'booked_at'  => '10 May 2026  08:12 AM',
@@ -33,7 +36,7 @@
 
   $page_title = 'AU VAN - Ticket';
   $user_role  = 'passenger';
-  $user_name  = 'Jane Doe';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

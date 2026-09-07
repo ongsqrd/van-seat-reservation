@@ -1,6 +1,9 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/bookings.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   // split by status so each tab renders its own list
   $upcoming  = [];
@@ -63,7 +66,7 @@
 
   $page_title = 'AU VAN - History';
   $user_role  = 'passenger';
-  $user_name  = 'Jane Doe';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

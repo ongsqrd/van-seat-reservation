@@ -1,6 +1,9 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/schedule.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   // --- what trip-times.php posted ---
   $routeId    = isset($_POST['route_id'])     ? (int) $_POST['route_id']     : 0;
@@ -10,7 +13,7 @@
 
   $route    = find_route($routeId);
   $slot     = find_slot($tripId);
-  $dropoffs = get_dropoffs($routeId);
+  $dropoffs = get_dropoffs();
   $dropoff  = $dropoffs[$dropoffKey] ?? null;
 
   // nothing to confirm without a valid trip — send them back to the start
@@ -29,7 +32,7 @@
   // comes from the trips table once the data is in
   $date = '10 May 2026';
 
-  $passengerName = 'Jane Doe';
+  $passengerName = $user['name'];
 
   $page_title = 'AU VAN - Booking';
   $user_role  = 'passenger';
