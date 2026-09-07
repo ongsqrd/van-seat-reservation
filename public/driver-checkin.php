@@ -1,8 +1,12 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/driver-today.php';
+  require_once '../includes/auth.php';
 
-  // which trip? validate against today's trips; bounce back if the id is bogus
+  $user = require_role('driver');
+
+  // which trip? validate against today's trips (already scoped to this
+  // driver) — bounce back if the id is bogus or isn't one of theirs
   $tripId = isset($_GET['trip']) ? (int) $_GET['trip'] : 0;
   $trip   = null;
   foreach (get_todays_trips() as $t) {
@@ -19,25 +23,75 @@
   $route = find_route($trip['route_id']);
   $from  = $route['from'] ?? '';
   $to    = $route['to']   ?? '';
-  $date  = '10 May 2026';
+  $date  = today_label();
 
   /* ------------------------------------------------------------------
-     Placeholder check-in state. Real scanning is out of scope (mock),
-     so the scanner below is decorative; manual entry is the working
-     path. 'boarded' is seats checked in of the van's capacity. Recently
-     Boarded is a short activity feed, not the full boarded list.
+     Manual entry is the real check-in path (QR scanning is simulated by
+     design — the scanner below stays decorative). Submitting a booking
+     reference:
+       - blank                     -> 'empty'
+       - no such booking           -> 'notfound'
+       - booking is for another trip -> 'wrongtrip'
+       - already boarded           -> 'already' (not an error, just a notice)
+       - otherwise                 -> marks it boarded, then redirects
+         back to this same page (POST-redirect-GET, 303) so a refresh
+         can't re-process the same submission.
      ------------------------------------------------------------------ */
-  $capacity = 15;
-  $boarded  = 4;
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      require_once '../includes/bookings.php';
+
+      $reference = trim($_POST['reference'] ?? '');
+      $booking   = $reference !== '' ? find_booking($reference) : null;
+
+      $checkinError = match (true) {
+          $reference === ''                          => 'empty',
+          $booking === null                           => 'notfound',
+          $booking['trip_id'] !== $tripId              => 'wrongtrip',
+          $booking['board_status'] === 'boarded'       => 'already',
+          default                                      => null,
+      };
+
+      if ($checkinError === null) {
+          $stmt = db()->prepare("UPDATE bookings SET board_status = 'boarded' WHERE id = ?");
+          $stmt->bind_param('i', $booking['booking_id']);
+          $stmt->execute();
+
+          // 303: every client must follow up with GET, so a page refresh
+          // can't resubmit the same check-in
+          header('Location: driver-checkin.php?trip=' . $tripId . '&checked_in=' . urlencode($reference), true, 303);
+          exit;
+      }
+
+      // rejected — bounce back with the error and the reference typed,
+      // same pattern as login/register's sticky-field error banners
+      header('Location: driver-checkin.php?trip=' . $tripId
+             . '&error=' . $checkinError . '&ref=' . urlencode($reference), true, 303);
+      exit;
+  }
+
+  $checkinErrorText = [
+      'empty'     => 'Enter a booking reference.',
+      'notfound'  => 'No booking found with that reference.',
+      'wrongtrip' => "That booking isn't on this trip.",
+      'already'   => 'That booking has already been checked in.',
+  ][$_GET['error'] ?? ''] ?? null;
+  $refValue   = $_GET['ref'] ?? '';
+  $justBoarded = $_GET['checked_in'] ?? null;
+
+  $manifest = get_trip_manifest($tripId);
+  $capacity = $trip['capacity'];
+  $boarded  = array_sum(array_map(
+      fn($m) => $m['status'] === 'boarded' ? $m['seats'] : 0,
+      $manifest
+  ));
   $percent  = $capacity > 0 ? round($boarded / $capacity * 100) : 0;
 
-  $recently_boarded = [
-      ['passenger' => 'Jane Doe', 'seats' => 3, 'reference' => 'F134WD24A'],
-  ];
+  // "recently boarded" = everyone currently boarded on this trip
+  $recently_boarded = array_values(array_filter($manifest, fn($m) => $m['status'] === 'boarded'));
 
   $page_title = 'AU VAN - Check-in';
   $user_role  = 'driver';
-  $user_name = 'Patchara Chainiyom';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 
@@ -59,6 +113,12 @@
           <h2>Check in &middot; <?= htmlspecialchars($from) ?> &rarr; <?= htmlspecialchars($to) ?></h2>
           <p class="checkin-sub"><?= htmlspecialchars($date) ?> &middot; <?= htmlspecialchars($trip['time']) ?></p>
         </div>
+
+        <?php if ($justBoarded !== null): ?>
+          <p class="auth-error checkin-success">Checked in: <?= htmlspecialchars($justBoarded) ?></p>
+        <?php elseif ($checkinErrorText !== null): ?>
+          <p class="auth-error"><?= htmlspecialchars($checkinErrorText) ?></p>
+        <?php endif; ?>
 
         <div class="checkin-grid">
 
@@ -84,6 +144,7 @@
               <div class="field">
                 <label class="field-label" for="reference">Booking ref</label>
                 <input class="input" type="text" id="reference" name="reference"
+                       value="<?= htmlspecialchars($refValue) ?>"
                        placeholder="e.g. B31FRE3D" autocomplete="off">
               </div>
               <button class="btn btn-primary btn-block" type="submit">Check in</button>
@@ -103,17 +164,21 @@
 
             <section class="card checkin-recent">
               <h2 class="card-title">Recently Boarded</h2>
-              <ul class="checkin-recent-list">
-                <?php foreach ($recently_boarded as $r): ?>
-                  <li class="checkin-recent-item">
-                    <span class="checkin-recent-info">
-                      <span class="checkin-recent-name"><?= htmlspecialchars($r['passenger']) ?></span>
-                      <span class="checkin-recent-meta"><?= (int) $r['seats'] ?> seats &middot; <?= htmlspecialchars($r['reference']) ?></span>
-                    </span>
-                    <span class="manifest-status is-boarded">Boarded</span>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
+              <?php if ($recently_boarded): ?>
+                <ul class="checkin-recent-list">
+                  <?php foreach ($recently_boarded as $r): ?>
+                    <li class="checkin-recent-item">
+                      <span class="checkin-recent-info">
+                        <span class="checkin-recent-name"><?= htmlspecialchars($r['passenger']) ?></span>
+                        <span class="checkin-recent-meta"><?= (int) $r['seats'] ?> seats &middot; <?= htmlspecialchars($r['reference']) ?></span>
+                      </span>
+                      <span class="manifest-status is-boarded">Boarded</span>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              <?php else: ?>
+                <p class="bookings-empty">No one boarded yet.</p>
+              <?php endif; ?>
             </section>
 
           </aside>

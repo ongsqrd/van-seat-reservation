@@ -1,13 +1,28 @@
 <?php
   require_once '../includes/driver-today.php';
+  require_once '../includes/auth.php';
+  require_once '../includes/db.php';
 
-  /* ------------------------------------------------------------------
-     Placeholder account (driver). Same shell as the passenger profile;
-     only the data, role, summary card, and self-link differ.
-     ------------------------------------------------------------------ */
+  $user = require_role('driver');
+
+  // same phone-formatting helper as the passenger profile — Thai mobile
+  // numbers are stored as plain digits, displayed grouped 3-3-4
+  function format_phone_display(string $phone): string
+  {
+      if (preg_match('/^(\d{3})(\d{3})(\d{4})$/', $phone, $m)) {
+          return "{$m[1]} {$m[2]} {$m[3]}";
+      }
+      return $phone;
+  }
+
+  $stmt = db()->prepare('SELECT name, phone FROM users WHERE id = ?');
+  $stmt->bind_param('i', $user['id']);
+  $stmt->execute();
+  $row = $stmt->get_result()->fetch_assoc();
+
   $profile = [
-    'name'  => 'Patchara Chainiyom',
-    'phone' => '0924457781',
+    'name'  => $row['name'],
+    'phone' => format_phone_display($row['phone']),
     'role'  => 'Driver',
   ];
 

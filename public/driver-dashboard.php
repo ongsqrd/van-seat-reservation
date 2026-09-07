@@ -1,10 +1,13 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/driver-today.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('driver');
 
   $trips = get_todays_trips();
   $count = count($trips);
-  $date  = '10 May 2026';          // hardcoded like the rest of the flow; no trips table yet
+  $date  = today_label();
 
   function trip_status_label(string $status): string
   {
@@ -13,7 +16,7 @@
 
   $page_title = 'AU VAN - Dashboard';
   $user_role  = 'driver';
-  $user_name = 'Patchara Chainiyom';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

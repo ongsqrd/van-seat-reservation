@@ -15,13 +15,14 @@
  */
 
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/today.php';
 
 /**
  * @return array<int, array{time: string, capacity: int, available: int}>
  */
 function get_slots(?int $routeId = null): array
 {
-    $today = '2026-05-10';   // TODO: date('Y-m-d')
+    $today = today_iso();
 
     $base = "
         SELECT

@@ -1,8 +1,12 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/driver-today.php';
+  require_once '../includes/auth.php';
 
-  // which trip? validate against today's trips; bounce back if the id is bogus
+  $user = require_role('driver');
+
+  // which trip? validate against today's trips (already scoped to this
+  // driver) — bounce back if the id is bogus or isn't one of theirs
   $tripId = isset($_GET['trip']) ? (int) $_GET['trip'] : 0;
   $trip   = null;
   foreach (get_todays_trips() as $t) {
@@ -19,18 +23,10 @@
   $route = find_route($trip['route_id']);
   $from  = $route['from'] ?? '';
   $to    = $route['to']   ?? '';
-  $date  = '10 May 2026';
+  $date  = today_label();
 
-  /* ------------------------------------------------------------------
-     Placeholder manifest for this trip. Per-trip passenger lists arrive
-     with the bookings table; for now the same list stands in whichever
-     trip you open. 'boarded' / 'waiting' is the check-in status.
-     ------------------------------------------------------------------ */
-  $capacity = 15;                        // the assigned van's seats
-  $manifest = [
-      ['passenger' => 'Jane Doe',    'seats' => 3, 'dropoff' => 'Bangna Junction', 'status' => 'boarded'],
-      ['passenger' => 'John Watson', 'seats' => 1, 'dropoff' => 'Mega Bangna',     'status' => 'waiting'],
-  ];
+  $capacity = $trip['capacity'];   // the assigned van's seats — already resolved by get_todays_trips()
+  $manifest = get_trip_manifest($tripId);
 
   $bookings = count($manifest);
   $booked   = array_sum(array_column($manifest, 'seats'));
@@ -42,7 +38,7 @@
 
   $page_title = 'AU VAN - Details';
   $user_role  = 'driver';
-  $user_name = 'Patchara Chainiyom';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 
