@@ -10,7 +10,7 @@
 
   $route    = find_route($routeId);
   $slot     = find_slot($tripId);
-  $dropoffs = get_dropoffs();
+  $dropoffs = get_dropoffs($routeId);
   $dropoff  = $dropoffs[$dropoffKey] ?? null;
 
   // nothing to confirm without a valid trip — send them back to the start

@@ -1,51 +1,56 @@
 <?php
 /**
- * includes/bookings.php
+ * includes/bookings.php — backed by MySQL (mysqli).
  *
- * Placeholder booking history. No bookings table exists yet, so this
- * stands in the way routes.php / schedule.php do — the page consumes
- * get_bookings() and never hardcodes the list itself.
+ * The logged-in passenger's bookings, in the shape my-bookings.php expects:
+ * reference, route_id (for find_route), trip_id, date, time, seats, and a
+ * derived 'upcoming'/'completed' status. The trip's date and time come from
+ * the joined trips row, so the card no longer needs a separate find_slot().
  *
- * Each booking points at a route and a slot by id, so From/To and the
- * boarding time resolve through find_route() / find_slot() and can't
- * drift from the trip. When the DB lands, this becomes a query scoped
- * to the logged-in passenger.
+ * Hardcoded until auth + a live clock exist:
+ *   - passenger:  $_SESSION['user_id'] later; for now the demo passenger
+ *                 Jane Doe (users.id = 1), matching the passenger pages.
+ *   - "today":    date('Y-m-d') in production; for now the seed's demo date
+ *                 2026-05-10 — trips before it are Completed, on/after Upcoming.
  */
+
+require_once __DIR__ . '/db.php';
 
 function get_bookings(): array
 {
-    return [
-        [
-            'reference' => 'F134WD24A',
-            'route_id'  => 1,
-            'trip_id'   => 1,
-            'date'      => '10 May 2026',
-            'seats'     => 3,
-            'status'    => 'upcoming',
-        ],
-        [
-            'reference' => 'HQE34EF2',
-            'route_id'  => 2,
-            'trip_id'   => 2,
-            'date'      => '11 May 2026',
-            'seats'     => 2,
-            'status'    => 'upcoming',
-        ],
-        [
-            'reference' => 'A72KD91C',
-            'route_id'  => 1,
-            'trip_id'   => 3,
-            'date'      => '2 May 2026',
-            'seats'     => 1,
-            'status'    => 'completed',
-        ],
-        [
-            'reference' => 'B65QP04E',
-            'route_id'  => 2,
-            'trip_id'   => 4,
-            'date'      => '28 Apr 2026',
-            'seats'     => 4,
-            'status'    => 'completed',
-        ],
-    ];
+    $userId    = 1;              // TODO: $_SESSION['user_id']
+    $todayDate = '2026-05-10';   // TODO: date('Y-m-d')
+
+    $stmt = db()->prepare("
+        SELECT
+            b.reference,
+            b.trip_id,
+            b.seats,
+            t.route_id,
+            DATE_FORMAT(t.trip_date,   '%e %b %Y')   AS date,
+            DATE_FORMAT(t.depart_time, '%h : %i %p') AS time,
+            CASE WHEN t.trip_date < ? THEN 'completed' ELSE 'upcoming' END AS status
+        FROM bookings b
+        JOIN trips t ON t.id = b.trip_id
+        WHERE b.user_id = ?
+        ORDER BY t.trip_date, t.depart_time
+    ");
+    $stmt->bind_param('si', $todayDate, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $bookings = [];
+    while ($row = $result->fetch_assoc()) {
+        $bookings[] = [
+            'reference' => $row['reference'],
+            'route_id'  => (int) $row['route_id'],
+            'trip_id'   => (int) $row['trip_id'],
+            'date'      => $row['date'],
+            'time'      => $row['time'],
+            'seats'     => (int) $row['seats'],
+            'status'    => $row['status'],
+        ];
+    }
+
+    return $bookings;
 }

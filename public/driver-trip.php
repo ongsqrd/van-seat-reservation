@@ -42,7 +42,7 @@
 
   $page_title = 'AU VAN - Details';
   $user_role  = 'driver';
-  $user_name  = 'John Doe';
+  $user_name = 'Patchara Chainiyom';
   include '../includes/header.php';
 ?>
 

@@ -11,8 +11,8 @@
       exit;
   }
 
-  $slots    = get_slots();
-  $dropoffs = get_dropoffs();
+  $slots    = get_slots($routeId);
+  $dropoffs = get_dropoffs($routeId);
 
   // two columns, filled top to bottom — the row count follows the data
   $rows = (int) ceil(count($slots) / 2);
