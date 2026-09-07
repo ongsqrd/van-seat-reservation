@@ -1,14 +1,30 @@
 <?php
   require_once '../includes/bookings.php';
+  require_once '../includes/auth.php';
+  require_once '../includes/db.php';
 
-  /* ------------------------------------------------------------------
-     Placeholder account (passenger). No users table / session yet, so
-     the account is faked here. When auth lands it comes from the
-     session / users table. Body is rendered by includes/profile-shell.php.
-     ------------------------------------------------------------------ */
+  $user = require_role('passenger');
+
+  /**
+   * Thai mobile numbers are stored as plain digits (0913345776);
+   * display them grouped 3-3-4 the way the UI always has.
+   */
+  function format_phone_display(string $phone): string
+  {
+      if (preg_match('/^(\d{3})(\d{3})(\d{4})$/', $phone, $m)) {
+          return "{$m[1]} {$m[2]} {$m[3]}";
+      }
+      return $phone;   // unexpected format — show as stored rather than mangle it
+  }
+
+  $stmt = db()->prepare('SELECT name, phone FROM users WHERE id = ?');
+  $stmt->bind_param('i', $user['id']);
+  $stmt->execute();
+  $row = $stmt->get_result()->fetch_assoc();
+
   $profile = [
-    'name'  => 'Jane Doe',
-    'phone' => '091 334 5776',
+    'name'  => $row['name'],
+    'phone' => format_phone_display($row['phone']),
     'role'  => 'Passenger',
   ];
 

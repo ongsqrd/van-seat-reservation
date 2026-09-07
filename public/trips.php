@@ -1,11 +1,14 @@
 <?php
   require_once '../includes/routes.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   $routes = get_routes();
 
   $page_title = 'AU VAN - Route Selection';
   $user_role  = 'passenger';
-  $user_name  = 'Jane Doe';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

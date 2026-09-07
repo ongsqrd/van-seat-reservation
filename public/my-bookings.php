@@ -1,7 +1,9 @@
 <?php
   require_once '../includes/routes.php';
-  require_once '../includes/schedule.php';
   require_once '../includes/bookings.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   // split by status so each tab renders its own list
   $upcoming  = [];
@@ -19,11 +21,9 @@
   function render_booking_card(array $b): void
   {
       $route = find_route($b['route_id']);
-      $slot  = find_slot($b['trip_id']);
-
       $from  = $route['from'] ?? '';
       $to    = $route['to']   ?? '';
-      $time  = $slot['time']  ?? '';
+      $time  = $b['time'];
       $seats = (int) $b['seats'];
   ?>
     <li class="booking-card">
@@ -66,7 +66,7 @@
 
   $page_title = 'AU VAN - History';
   $user_role  = 'passenger';
-  $user_name  = 'Jane Doe';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

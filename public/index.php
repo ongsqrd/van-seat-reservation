@@ -3,25 +3,14 @@
      index.php — entry router.
 
      Sends a signed-in user to their role's home and guests to
-     login. Auth isn't wired yet, so with no session this always
-     lands on login.php; once login_process populates the session
-     ($_SESSION['user_role']), the switch routes each role home.
+     login. role_home() (includes/auth.php) is the single source
+     for the role -> page mapping; login_process.php uses the same
+     function after a successful login, so the two can't disagree.
 
      No markup here — it's a redirect, so no header/footer.
      ------------------------------------------------------------ */
+  require_once '../includes/auth.php';
   session_start();
 
-  switch ($_SESSION['user_role'] ?? 'guest') {
-      case 'passenger':
-          header('Location: trips.php');
-          break;
-      case 'driver':
-          header('Location: driver-dashboard.php');
-          break;
-      case 'admin':
-          header('Location: admin-dashboard.php');
-          break;
-      default:
-          header('Location: login.php');
-  }
+  header('Location: ' . role_home($_SESSION['user_role'] ?? 'guest'));
   exit;

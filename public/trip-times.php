@@ -1,6 +1,9 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/schedule.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   // which route did we arrive from? bounce back if the id is missing or bogus
   $routeId = isset($_GET['route']) ? (int) $_GET['route'] : 0;
@@ -11,15 +14,15 @@
       exit;
   }
 
-  $slots    = get_slots();
-  $dropoffs = get_dropoffs();
+  $slots    = get_slots($routeId);
+  $dropoffs = get_dropoffs($routeId);
 
   // two columns, filled top to bottom — the row count follows the data
   $rows = (int) ceil(count($slots) / 2);
 
   $page_title = 'AU VAN - Time';
   $user_role  = 'passenger';
-  $user_name  = 'Jane Doe';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

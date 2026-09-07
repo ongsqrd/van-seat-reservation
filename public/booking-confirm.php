@@ -1,6 +1,10 @@
 <?php
   require_once '../includes/routes.php';
   require_once '../includes/schedule.php';
+  require_once '../includes/bookings.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('passenger');
 
   // --- what trip-times.php posted ---
   $routeId    = isset($_POST['route_id'])     ? (int) $_POST['route_id']     : 0;
@@ -8,60 +12,33 @@
   $seats      = isset($_POST['numPassenger']) ? (int) $_POST['numPassenger'] : 0;
   $dropoffKey = $_POST['dropoff'] ?? '';
 
-  $route    = find_route($routeId);
-  $slot     = find_slot($tripId);
-  $dropoffs = get_dropoffs();
-  $dropoff  = $dropoffs[$dropoffKey] ?? null;
+  // shared with booking-success.php's commit step, so review and commit
+  // can never validate a booking request differently
+  $valid = validate_booking_request($routeId, $tripId, $dropoffKey, $seats);
 
   // nothing to confirm without a valid trip — send them back to the start
-  if ($route === null || $slot === null || $dropoff === null
-      || $seats < 1 || $seats > 4 || $seats > $slot['available']) {
+  if ($valid === null) {
       header('Location: trips.php');
       exit;
   }
+  ['route' => $route, 'slot' => $slot, 'dropoff' => $dropoff] = $valid;
 
   $fare  = $route['fare'];
   $total = $fare * $seats;
 
-  // mock reference. the real one is the bookings table id / ref column
-  $bookingRef = 'QWSE-' . str_pad((string) random_int(1, 99999), 5, '0', STR_PAD_LEFT);
+  // this is a REVIEW step only — nothing is booked yet. Submitting the
+  // form below is a normal browser POST to booking-success.php, which
+  // validates again, inserts, and redirects (POST-redirect-GET) to the
+  // real confirmation screen — no JS involved.
+  $date = $slot['date'];
 
-  // comes from the trips table once the data is in
-  $date = '10 May 2026';
-
-  $passengerName = 'Jane Doe';
+  $passengerName = $user['name'];
 
   $page_title = 'AU VAN - Booking';
   $user_role  = 'passenger';
   $user_name  = $passengerName;
-  $page_script = 'booking-confirm.js';
   include '../includes/header.php';
 ?>
-
-  <dialog class="modal" id="bookingConfirmed" aria-labelledby="confirmedTitle">
-    <div class="modal-card">
-
-      <span class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-      </span>
-
-      <h2 class="modal-title" id="confirmedTitle">Booking Confirmed</h2>
-      <p class="modal-text">Your trip has been successfully booked</p>
-
-      <p class="modal-ref">
-        Booking ID: <strong><?= htmlspecialchars($bookingRef) ?></strong>
-      </p>
-
-      <div class="modal-actions">
-        <a href="ticket.php" class="btn btn-primary btn-block">View Ticket</a>
-        <a href="trips.php" class="btn btn-secondary btn-block">Back to Home</a>
-      </div>
-
-    </div>
-  </dialog>
 
   <main class="page">
     <div class="container container-wide">

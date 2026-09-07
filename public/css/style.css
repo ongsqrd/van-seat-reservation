@@ -553,6 +553,18 @@ select.input {
   color: var(--text-secondary);
 }
 
+.auth-error {
+  margin-bottom: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: var(--border-w) solid var(--brand-primary);
+  border-radius: var(--radius);
+  background: var(--brand-tint);
+
+  font-size: var(--text-sm);
+  color: var(--brand-primary);
+  text-align: center;
+}
+
 
 /* ------------------------------------------------------------
    7d. ROUTE SELECTION  (trips)

@@ -1,6 +1,10 @@
 <?php
   $page_title = 'AU Van — Login';
   $user_role  = 'guest';
+
+  $loginError = $_GET['error'] ?? null;      // 'invalid' from login_process.php
+  $phoneValue = $_GET['phone'] ?? '';         // sticky — never the password
+
   include '../includes/header.php';
 ?>
 
@@ -9,11 +13,16 @@
 
             <h2 class="auth-title">Welcome Back!</h2>
 
+            <?php if ($loginError === 'invalid'): ?>
+              <p class="auth-error">Incorrect phone or password.</p>
+            <?php endif; ?>
+
             <form class="auth-form" action="login_process.php" method="POST">
 
                 <div class="field">
                     <label class="field-label" for="phone">PHONE</label>
                     <input class="input" type="tel" id="phone" name="phone"
+                           value="<?= htmlspecialchars($phoneValue) ?>"
                            autocomplete="tel" required>
                 </div>
 

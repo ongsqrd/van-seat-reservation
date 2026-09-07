@@ -1,41 +1,65 @@
 <?php
 /**
- * Shared route data.
+ * Shared route data — backed by MySQL (mysqli).
  *
- * trips.php lists these; trip-times.php looks one up by ?route=<id>.
- * Keeping them here means the two pages can never disagree.
- *
- * In the PHP phase get_routes() becomes a SELECT on the routes table
- * and find_route() a WHERE route_id = ?. Nothing that calls them changes.
+ * Routes are stored normalised: routes(id, name, fare) plus an ordered
+ * route_stops chain. get_routes() rebuilds the flat shape the pages expect
+ * (from = first stop, to = last stop), so nothing that calls these changes.
  */
 
+require_once __DIR__ . '/db.php';
+
 /**
- * All routes, keyed by route id.
+ * All routes, keyed by route id. Queried once, then cached for the request.
  *
  * @return array<int, array{name: string, from: string, to: string, fare: int}>
  */
 function get_routes(): array
 {
-    return [
-        1 => ['name' => 'Assumption University', 'from' => 'Bangna',        'to' => 'Assumption U.', 'fare' => 40],
-        2 => ['name' => 'Hua Mak Campus',        'from' => 'Assumption U.', 'to' => 'Hua Mak',       'fare' => 40],
-        3 => ['name' => 'Bangna',                'from' => 'Assumption U.', 'to' => 'Bangna',        'fare' => 40],
-        4 => ['name' => 'Assumption University', 'from' => 'Hua Mak',       'to' => 'Assumption U.', 'fare' => 40],
-    ];
+    static $routes = null;
+    if ($routes !== null) {
+        return $routes;
+    }
+
+    // origin = the seq-1 stop; terminus = the highest-seq stop
+    $sql = "
+        SELECT
+            r.id,
+            r.name,
+            r.fare,
+            (SELECT s.name FROM route_stops rs JOIN stops s ON s.id = rs.stop_id
+               WHERE rs.route_id = r.id ORDER BY rs.seq ASC  LIMIT 1) AS `from`,
+            (SELECT s.name FROM route_stops rs JOIN stops s ON s.id = rs.stop_id
+               WHERE rs.route_id = r.id ORDER BY rs.seq DESC LIMIT 1) AS `to`
+        FROM routes r
+        ORDER BY r.id
+    ";
+
+    $routes = [];
+    $result = db()->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $routes[(int) $row['id']] = [
+            'name' => $row['name'],
+            'from' => $row['from'],
+            'to'   => $row['to'],
+            'fare' => (int) $row['fare'],
+        ];
+    }
+
+    return $routes;
 }
 
 /**
- * One route by id, or null if the id does not exist.
+ * One route by id, or null if it does not exist.
  */
 function find_route(int $id): ?array
 {
-    $routes = get_routes();
-
-    return $routes[$id] ?? null;
+    return get_routes()[$id] ?? null;
 }
 
 /**
  * The subtitle line, e.g. "From Bangna to Assumption U."
+ * Pure formatting — no database access.
  */
 function route_detail(array $route): string
 {
@@ -43,19 +67,39 @@ function route_detail(array $route): string
 }
 
 /**
- * Drop-off points, keyed by the value used in the select.
+ * Drop-off points, keyed by stop id so the value maps straight onto
+ * bookings.dropoff_stop_id.
  *
- * Flat for now. The stops table has these per route, so this becomes
- * get_dropoffs(int $routeId) once the data is in.
+ * With a route id: that route's stops after the origin, in travel order —
+ * the correct per-route drop-offs. Without one: every stop, ordered by
+ * name — a safe fallback so a caller not yet passing the id still works.
  *
- * @return array<string, string>
+ * @return array<int, string>  stop id => stop name
  */
-function get_dropoffs(): array
+function get_dropoffs(?int $routeId = null): array
 {
-    return [
-        'bangna'         => 'Bangna',
-        'mega-bangna'    => 'Mega Bangna',
-        'market-village' => 'Market Village',
-        'paradise-park'  => 'Paradise Park',
-    ];
+    $out = [];
+
+    if ($routeId === null) {
+        $result = db()->query("SELECT id, name FROM stops ORDER BY name");
+        while ($row = $result->fetch_assoc()) {
+            $out[(int) $row['id']] = $row['name'];
+        }
+        return $out;
+    }
+
+    $stmt = db()->prepare("
+        SELECT s.id, s.name
+        FROM route_stops rs
+        JOIN stops s ON s.id = rs.stop_id
+        WHERE rs.route_id = ? AND rs.seq > 1
+        ORDER BY rs.seq
+    ");
+    $stmt->bind_param('i', $routeId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $out[(int) $row['id']] = $row['name'];
+    }
+    return $out;
 }
