@@ -17,7 +17,7 @@ session_start();
 $phone    = trim($_POST['phone'] ?? '');
 $password = (string) ($_POST['password'] ?? '');
 
-function login_fail(string $phone): never
+function login_fail(string $phone)
 {
     header('Location: login.php?error=invalid&phone=' . urlencode($phone));
     exit;
