@@ -1,22 +1,43 @@
 <?php
-  /* ------------------------------------------------------------------
-     Placeholder admin figures. These become COUNT queries once the DB
-     lands (trips today, seats booked, drivers on duty, and trips still
-     missing a driver). Hardcoded for now like the rest of the UI phase.
-     ------------------------------------------------------------------ */
-  $date = '10 May 2026';
+  require_once '../includes/admin-today.php';
+  require_once '../includes/auth.php';
+
+  $user = require_role('admin');
+
+  $date  = today_label();
+  $today = today_iso();
+
+  $todaysTrips = get_admin_trips();
+  $unassigned  = count(array_filter($todaysTrips, fn($t) => $t['driver'] === null));
+
+  $seatsBookedStmt = db()->prepare("
+      SELECT COALESCE(SUM(b.seats), 0) AS total
+      FROM bookings b
+      JOIN trips t ON t.id = b.trip_id
+      WHERE t.trip_date = ?
+  ");
+  $seatsBookedStmt->bind_param('s', $today);
+  $seatsBookedStmt->execute();
+  $seatsBooked = (int) $seatsBookedStmt->get_result()->fetch_assoc()['total'];
+
+  $driversOnDutyStmt = db()->prepare("
+      SELECT COUNT(DISTINCT driver_id) AS total
+      FROM trips
+      WHERE trip_date = ? AND driver_id IS NOT NULL
+  ");
+  $driversOnDutyStmt->bind_param('s', $today);
+  $driversOnDutyStmt->execute();
+  $driversOnDuty = (int) $driversOnDutyStmt->get_result()->fetch_assoc()['total'];
 
   $stats = [
-      ['label' => 'Trips Today',  'value' => 6],
-      ['label' => 'Seats Booked', 'value' => 58],
-      ['label' => 'Drivers',      'value' => 4],
+      ['label' => 'Trips Today',  'value' => count($todaysTrips)],
+      ['label' => 'Seats Booked', 'value' => $seatsBooked],
+      ['label' => 'Drivers',      'value' => $driversOnDuty],
   ];
-
-  $unassigned = 2;                 // trips with no driver assigned yet
 
   $page_title = 'AU VAN - Dashboard';
   $user_role  = 'admin';
-  $user_name  = 'Chanyapat Saeng-Xuto';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 

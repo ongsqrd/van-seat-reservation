@@ -1,32 +1,104 @@
 <?php
   require_once '../includes/routes.php';
+  require_once '../includes/vans.php';
+  require_once '../includes/admin-today.php';
+  require_once '../includes/auth.php';
 
-  $date = '10 May 2026';
+  $user = require_role('admin');
+
+  $date  = today_label();
+  $routes = get_routes();
+  $vans   = get_vans();
 
   /* ------------------------------------------------------------------
-     Placeholder scheduled trips. Coherent with the dashboard: 6 trips,
-     2 without a driver. Each references a route by id (From/To resolve
-     through find_route). driver = null means Unassigned.
+     Two forms POST here: the create-trip form and the assign-driver
+     form (which now carries a hidden trip_id — the original placeholder
+     markup never did, so there was nothing to tell the server which
+     trip was being assigned). $_POST['action'] only appears on the
+     assign form, so its presence is what tells the two apart.
      ------------------------------------------------------------------ */
-  $trips = [
-      ['id' => 1, 'time' => '08 : 00 AM', 'route_id' => 1, 'driver' => 'Sherlock H.'],
-      ['id' => 2, 'time' => '10 : 00 AM', 'route_id' => 4, 'driver' => 'John Doe'],
-      ['id' => 3, 'time' => '12 : 00 PM', 'route_id' => 3, 'driver' => 'Sherlock H.'],
-      ['id' => 4, 'time' => '01 : 30 PM', 'route_id' => 2, 'driver' => null],
-      ['id' => 5, 'time' => '03 : 00 PM', 'route_id' => 1, 'driver' => 'Molly E.'],
-      ['id' => 6, 'time' => '04 : 30 PM', 'route_id' => 2, 'driver' => null],
-  ];
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-  // drivers offered in the assign popup
-  $drivers = [
-      ['name' => 'James M.', 'status' => 'Free',     'available' => true],
-      ['name' => 'Molly E.', 'status' => 'Free',     'available' => true],
-      ['name' => 'John Doe', 'status' => 'Driving',  'available' => false],
-      ['name' => 'Bob B.',   'status' => 'Assigned', 'available' => false],
-  ];
+      if (isset($_POST['action'])) {
+          // --- assign or remove a driver on an existing trip ---
+          $tripId = (int) ($_POST['trip_id'] ?? 0);
+          $trips  = get_admin_trips();
+          $trip   = null;
+          foreach ($trips as $t) {
+              if ($t['id'] === $tripId) { $trip = $t; break; }
+          }
+          if ($trip === null) {
+              header('Location: admin-trips.php', true, 303);
+              exit;
+          }
 
-  $routes = get_routes();
-  $vans   = ['กข 1234', 'พส 6767'];
+          if ($_POST['action'] === 'remove') {
+              $stmt = db()->prepare('UPDATE trips SET driver_id = NULL WHERE id = ?');
+              $stmt->bind_param('i', $tripId);
+              $stmt->execute();
+          } else {
+              $driverId = (int) ($_POST['driver'] ?? 0);
+
+              // never trust the client — the UI already prevents selecting
+              // an unavailable driver, but re-check server-side too
+              $available = get_available_drivers(today_iso(), $trip['raw_time'], $tripId);
+              $isFree    = false;
+              foreach ($available as $d) {
+                  if ($d['id'] === $driverId && $d['available']) { $isFree = true; break; }
+              }
+
+              if ($isFree) {
+                  $stmt = db()->prepare('UPDATE trips SET driver_id = ? WHERE id = ?');
+                  $stmt->bind_param('ii', $driverId, $tripId);
+                  $stmt->execute();
+              }
+              // if not free (stale popup, race condition), just fall through
+              // to the redirect below without writing anything
+          }
+
+          header('Location: admin-trips.php', true, 303);
+          exit;
+      }
+
+      // --- create a new trip ---
+      $newRouteId = (int) ($_POST['route'] ?? 0);
+      $newVanId   = (int) ($_POST['van']   ?? 0);
+      $newDate    = $_POST['date'] ?? '';
+      $newTime    = $_POST['time'] ?? '';
+      $newDriverId = (int) ($_POST['driver'] ?? 0);   // 0 = Unassigned
+
+      $createError = match (true) {
+          !isset($routes[$newRouteId])                      => 'route',
+          !isset($vans[$newVanId])                           => 'van',
+          !preg_match('/^\d{4}-\d{2}-\d{2}$/', $newDate)     => 'date',
+          !preg_match('/^\d{2}:\d{2}$/', $newTime)           => 'time',
+          default                                             => null,
+      };
+
+      if ($createError === null) {
+          $driverParam = $newDriverId > 0 ? $newDriverId : null;
+          $stmt = db()->prepare(
+              'INSERT INTO trips (route_id, van_id, driver_id, trip_date, depart_time) VALUES (?, ?, ?, ?, ?)'
+          );
+          $stmt->bind_param('iiiss', $newRouteId, $newVanId, $driverParam, $newDate, $newTime);
+          $stmt->execute();
+
+          header('Location: admin-trips.php', true, 303);
+          exit;
+      }
+
+      header('Location: admin-trips.php?new=1&error=' . $createError, true, 303);
+      exit;
+  }
+
+  $createErrorText = [
+      'route' => 'Choose a valid route.',
+      'van'   => 'Choose a valid van.',
+      'date'  => 'Enter a valid date.',
+      'time'  => 'Enter a valid time.',
+  ][$_GET['error'] ?? ''] ?? null;
+
+  $trips = get_admin_trips();
 
   // server-side state, same idiom as profile ?edit / manage ?tab
   $creating = isset($_GET['new']);
@@ -39,10 +111,24 @@
           break;
       }
   }
+  // drivers offered in the assign popup — conflict-checked against this
+  // trip's actual date + time, excluding the trip itself
+  $drivers = $assignTrip !== null
+      ? get_available_drivers(today_iso(), $assignTrip['raw_time'], $assignTrip['id'])
+      : [];
+
+  // all drivers, for the create-trip form's optional driver picker (no
+  // conflict-filtering there — the date/time are still free text at that
+  // point, so "available for this slot" isn't yet a meaningful question)
+  $allDrivers = [];
+  $result = db()->query("SELECT id, name FROM users WHERE role = 'driver' ORDER BY name");
+  while ($row = $result->fetch_assoc()) {
+      $allDrivers[] = ['id' => (int) $row['id'], 'name' => $row['name']];
+  }
 
   $page_title = 'AU VAN - Trips';
   $user_role  = 'admin';
-  $user_name  = 'Chanyapat Saeng-Xuto';
+  $user_name  = $user['name'];
   include '../includes/header.php';
 ?>
 
@@ -62,26 +148,31 @@
         <?php if ($creating): ?>
           <form class="card trip-create" method="POST" action="admin-trips.php">
             <h2 class="card-title">New Trip</h2>
+
+            <?php if ($createErrorText !== null): ?>
+              <p class="auth-error"><?= htmlspecialchars($createErrorText) ?></p>
+            <?php endif; ?>
+
             <div class="trip-create-grid">
               <div class="field">
                 <label class="field-label" for="route">Route</label>
                 <select class="input" id="route" name="route">
-                  <?php foreach ($routes as $r): ?>
-                    <option><?= htmlspecialchars($r['from']) ?> &rarr; <?= htmlspecialchars($r['to']) ?></option>
+                  <?php foreach ($routes as $rid => $r): ?>
+                    <option value="<?= (int) $rid ?>"><?= htmlspecialchars($r['from']) ?> &rarr; <?= htmlspecialchars($r['to']) ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
               <div class="field">
                 <label class="field-label" for="van">Van</label>
                 <select class="input" id="van" name="van">
-                  <?php foreach ($vans as $plate): ?>
-                    <option><?= htmlspecialchars($plate) ?></option>
+                  <?php foreach ($vans as $vid => $v): ?>
+                    <option value="<?= (int) $vid ?>"><?= htmlspecialchars($v['plate']) ?></option>
                   <?php endforeach; ?>
                 </select>
               </div>
               <div class="field">
                 <label class="field-label" for="date">Date</label>
-                <input class="input" type="date" id="date" name="date">
+                <input class="input" type="date" id="date" name="date" value="<?= htmlspecialchars(today_iso()) ?>">
               </div>
               <div class="field">
                 <label class="field-label" for="time">Time</label>
@@ -90,10 +181,10 @@
               <div class="field trip-create-driver">
                 <label class="field-label" for="driver">Driver <span class="field-hint">(optional)</span></label>
                 <select class="input" id="driver" name="driver">
-                  <option>Unassigned</option>
-                  <?php foreach ($drivers as $d): if ($d['available']): ?>
-                    <option><?= htmlspecialchars($d['name']) ?></option>
-                  <?php endif; endforeach; ?>
+                  <option value="0">Unassigned</option>
+                  <?php foreach ($allDrivers as $d): ?>
+                    <option value="<?= (int) $d['id'] ?>"><?= htmlspecialchars($d['name']) ?></option>
+                  <?php endforeach; ?>
                 </select>
               </div>
             </div>
@@ -145,6 +236,8 @@
     ?>
       <div class="trip-overlay">
         <form class="card trip-overlay-card" method="POST" action="admin-trips.php">
+          <input type="hidden" name="trip_id" value="<?= (int) $assignTrip['id'] ?>">
+
           <div class="trip-overlay-head">
             <h2 class="card-title">Assign Driver</h2>
             <p class="trip-overlay-sub">
@@ -160,8 +253,8 @@
                 <?php foreach ($drivers as $d): if ($d['available']): ?>
                   <li>
                     <label class="trip-driver">
-                      <input type="radio" name="driver" value="<?= htmlspecialchars($d['name']) ?>"
-                             <?= $assignTrip['driver'] === $d['name'] ? 'checked' : '' ?>>
+                      <input type="radio" name="driver" value="<?= (int) $d['id'] ?>"
+                             <?= $assignTrip['driver_id'] === $d['id'] ? 'checked' : '' ?>>
                       <span class="trip-driver-name"><?= htmlspecialchars($d['name']) ?></span>
                       <span class="trip-driver-status is-free"><?= htmlspecialchars($d['status']) ?></span>
                     </label>

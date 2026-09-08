@@ -100,6 +100,9 @@ $editing = $editing ?? isset($_GET['edit']);
       <?php else: ?>
 
         <!-- EDIT -->
+        <?php if (isset($profileErrorText) && $profileErrorText !== null): ?>
+          <p class="auth-error"><?= htmlspecialchars($profileErrorText) ?></p>
+        <?php endif; ?>
         <form class="profile-form" method="POST" action="<?= htmlspecialchars($self) ?>">
           <section class="card">
             <h2 class="card-title">Edit Profile</h2>

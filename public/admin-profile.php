@@ -1,11 +1,18 @@
 <?php
-  /* ------------------------------------------------------------------
-     Placeholder account (admin). Same shell as the passenger/driver
-     profiles; only the data, role, summary card, and self-link differ.
-     ------------------------------------------------------------------ */
+  require_once '../includes/auth.php';
+
+  $user = require_role('admin');
+
+  handle_profile_update($user['id'], 'admin-profile.php');
+
+  $stmt = db()->prepare('SELECT name, phone FROM users WHERE id = ?');
+  $stmt->bind_param('i', $user['id']);
+  $stmt->execute();
+  $row = $stmt->get_result()->fetch_assoc();
+
   $profile = [
-    'name'  => 'Chanyapat Saeng-Xuto',
-    'phone' => '091 743 9776',
+    'name'  => $row['name'],
+    'phone' => format_phone_display($row['phone']),
     'role'  => 'Admin',
   ];
 
@@ -18,6 +25,14 @@
 
   $self    = 'admin-profile.php';
   $editing = isset($_GET['edit']);
+
+  $profileErrorText = [
+      'name'     => 'Enter a name.',
+      'phone'    => 'Enter a valid 10-digit phone number.',
+      'taken'    => 'That phone number belongs to another account.',
+      'mismatch' => "Passwords don't match.",
+      'weak'     => 'Password must be at least 8 characters.',
+  ][$_GET['error'] ?? ''] ?? null;
 
   $page_title = 'AU VAN - Admin';
   $user_role  = 'admin';
