@@ -23,7 +23,7 @@ $password = (string) ($_POST['password'] ?? '');
 $confirm  = (string) ($_POST['confirmPassword'] ?? '');
 $agreed   = isset($_POST['terms']);   // unticked checkboxes send nothing at all
 
-function register_fail(string $error, string $fullname, string $phone): never
+function register_fail(string $error, string $fullname, string $phone)
 {
     $qs = http_build_query(['error' => $error, 'fullname' => $fullname, 'phone' => $phone]);
     header('Location: register.php?' . $qs);
