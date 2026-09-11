@@ -1,19 +1,7 @@
 <?php
-/**
- * Shared route data — backed by MySQL (mysqli).
- *
- * Routes are stored normalised: routes(id, name, fare) plus an ordered
- * route_stops chain. get_routes() rebuilds the flat shape the pages expect
- * (from = first stop, to = last stop), so nothing that calls these changes.
- */
 
 require_once __DIR__ . '/db.php';
 
-/**
- * All routes, keyed by route id. Queried once, then cached for the request.
- *
- * @return array<int, array{name: string, from: string, to: string, fare: int}>
- */
 function get_routes(): array
 {
     static $routes = null;
@@ -21,7 +9,6 @@ function get_routes(): array
         return $routes;
     }
 
-    // origin = the seq-1 stop; terminus = the highest-seq stop
     $sql = "
         SELECT
             r.id,
@@ -49,33 +36,16 @@ function get_routes(): array
     return $routes;
 }
 
-/**
- * One route by id, or null if it does not exist.
- */
 function find_route(int $id): ?array
 {
     return get_routes()[$id] ?? null;
 }
 
-/**
- * The subtitle line, e.g. "From Bangna to Assumption U."
- * Pure formatting — no database access.
- */
 function route_detail(array $route): string
 {
     return 'From ' . $route['from'] . ' to ' . $route['to'];
 }
 
-/**
- * Drop-off points, keyed by stop id so the value maps straight onto
- * bookings.dropoff_stop_id.
- *
- * With a route id: that route's stops after the origin, in travel order —
- * the correct per-route drop-offs. Without one: every stop, ordered by
- * name — a safe fallback so a caller not yet passing the id still works.
- *
- * @return array<int, string>  stop id => stop name
- */
 function get_dropoffs(?int $routeId = null): array
 {
     $out = [];
@@ -104,14 +74,6 @@ function get_dropoffs(?int $routeId = null): array
     return $out;
 }
 
-/**
- * The full ordered stop chain for a route (including the origin, seq 1)
- * — what the admin Stops tab shows. Unlike get_dropoffs(), which starts
- * after the origin (a passenger's actual choices), this is the complete
- * chain for managing a route's stops.
- *
- * @return array<int, array{seq: int, stop_id: int, name: string}>
- */
 function get_route_stop_chain(int $routeId): array
 {
     $stmt = db()->prepare("
@@ -136,12 +98,6 @@ function get_route_stop_chain(int $routeId): array
     return $chain;
 }
 
-/**
- * The id of a stop matching this name exactly, or a newly-created one if
- * no such stop exists yet. Used by the admin Stops tab's "Enter New Stop"
- * field, which lets the admin type a name without first checking whether
- * that stop already exists elsewhere in the system.
- */
 function find_or_create_stop(string $name): int
 {
     $stmt = db()->prepare('SELECT id FROM stops WHERE name = ?');

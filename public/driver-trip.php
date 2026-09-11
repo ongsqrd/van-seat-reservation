@@ -5,8 +5,6 @@
 
   $user = require_role('driver');
 
-  // which trip? validate against today's trips (already scoped to this
-  // driver) — bounce back if the id is bogus or isn't one of theirs
   $tripId = isset($_GET['trip']) ? (int) $_GET['trip'] : 0;
   $trip   = null;
   foreach (get_todays_trips() as $t) {
@@ -25,7 +23,7 @@
   $to    = $route['to']   ?? '';
   $date  = today_label();
 
-  $capacity = $trip['capacity'];   // the assigned van's seats — already resolved by get_todays_trips()
+  $capacity = $trip['capacity'];   
   $manifest = get_trip_manifest($tripId);
 
   $bookings = count($manifest);

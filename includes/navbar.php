@@ -1,17 +1,4 @@
 <?php
-  /* ------------------------------------------------------------
-     Navigation bar — included on every page.
-
-     TEMPORARY: each page sets these two variables before the
-     include. In the PHP phase they come from $_SESSION instead.
-
-       $user_role  'guest' | 'passenger' | 'driver' | 'admin'
-       $user_name  full name, used for the avatar initials
-
-     A guest sees the logo only. Login and register already link
-     to each other inside the form, so the bar stays clean.
-     ------------------------------------------------------------ */
-
   $user_role = $user_role ?? 'guest';
   $user_name = $user_name ?? '';
 
@@ -22,7 +9,6 @@
   }
   $initials = mb_substr($initials, 0, 2);
 
-  // the avatar links to the profile for this role
   $profile_pages = [
       'passenger' => 'profile.php',
       'driver'    => 'driver-profile.php',

@@ -15,20 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dropoffKey = $_POST['dropoff'] ?? '';
     $method     = ($_POST['method'] ?? 'promptpay') === 'card' ? 'card' : 'promptpay';
 
-    // same validator booking-confirm.php used for the summary — a request
-    // that was valid to review is validated identically here before it's
-    // actually written
     $valid = validate_booking_request($routeId, $tripId, $dropoffKey, $seats);
     if ($valid === null) {
-        // 303 (not the 302 default), so every client is required to
-        // follow up with GET — see the note on the success redirect below
         header('Location: trips.php', true, 303);
         exit;
     }
 
     $total     = $valid['route']['fare'] * $seats;
     $reference = generate_booking_reference();
-    $dropoffStopId = (int) $dropoffKey;   // bind_param needs a real variable, not a cast expression
+    $dropoffStopId = (int) $dropoffKey;   
 
     $stmt = db()->prepare("
         INSERT INTO bookings
@@ -38,13 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param('siiiisi', $reference, $tripId, $user['id'], $dropoffStopId, $seats, $method, $total);
     $stmt->execute();
 
-    // POST-redirect-GET, explicitly as 303 See Other rather than PHP's
-    // 302 default. 303 is the status HTTP defines specifically for "the
-    // result of this POST is over there — fetch it with GET": every
-    // compliant client (browsers, fetch(), curl) MUST switch to GET, no
-    // client-specific convention to rely on. Verified: with a plain 302,
-    // at least one real client resent this exact request as POST and
-    // re-ran the insert branch on every hop; 303 closes that off.
     header('Location: booking-success.php?ref=' . urlencode($reference), true, 303);
     exit;
 }
@@ -52,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $reference = $_GET['ref'] ?? null;
 $booking   = $reference !== null ? find_booking($reference) : null;
 
-// no booking, or it exists but belongs to someone else — nothing to show
 if ($booking === null || $booking['user_id'] !== $user['id']) {
     header('Location: trips.php', true, 303);
     exit;

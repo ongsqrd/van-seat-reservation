@@ -1,17 +1,4 @@
 <?php
-  /* ------------------------------------------------------------
-     Shared document head + navbar. A page sets these before it
-     includes this file:
-
-       $page_title  window/tab title (defaults to "AU VAN")
-       $user_role   'guest' | 'passenger' | 'driver' | 'admin'
-       $user_name   full name, for the avatar initials
-
-     then emits its <main>, and finally includes footer.php.
-
-     The stylesheet href is relative to the page URL (all pages
-     live in /public), so it resolves the same for every page.
-     ------------------------------------------------------------ */
   $page_title = $page_title ?? 'AU VAN';
 ?>
 <!DOCTYPE html>

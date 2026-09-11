@@ -10,17 +10,9 @@
   $routes = get_routes();
   $vans   = get_vans();
 
-  /* ------------------------------------------------------------------
-     Two forms POST here: the create-trip form and the assign-driver
-     form (which now carries a hidden trip_id — the original placeholder
-     markup never did, so there was nothing to tell the server which
-     trip was being assigned). $_POST['action'] only appears on the
-     assign form, so its presence is what tells the two apart.
-     ------------------------------------------------------------------ */
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       if (isset($_POST['action'])) {
-          // --- assign or remove a driver on an existing trip ---
           $tripId = (int) ($_POST['trip_id'] ?? 0);
           $trips  = get_admin_trips();
           $trip   = null;

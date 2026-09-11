@@ -6,17 +6,13 @@
 
   $user = require_role('passenger');
 
-  // --- what trip-times.php posted ---
   $routeId    = isset($_POST['route_id'])     ? (int) $_POST['route_id']     : 0;
   $tripId     = isset($_POST['trip_id'])      ? (int) $_POST['trip_id']      : 0;
   $seats      = isset($_POST['numPassenger']) ? (int) $_POST['numPassenger'] : 0;
   $dropoffKey = $_POST['dropoff'] ?? '';
 
-  // shared with booking-success.php's commit step, so review and commit
-  // can never validate a booking request differently
   $valid = validate_booking_request($routeId, $tripId, $dropoffKey, $seats);
 
-  // nothing to confirm without a valid trip — send them back to the start
   if ($valid === null) {
       header('Location: trips.php');
       exit;
@@ -26,10 +22,6 @@
   $fare  = $route['fare'];
   $total = $fare * $seats;
 
-  // this is a REVIEW step only — nothing is booked yet. Submitting the
-  // form below is a normal browser POST to booking-success.php, which
-  // validates again, inserts, and redirects (POST-redirect-GET) to the
-  // real confirmation screen — no JS involved.
   $date = $slot['date'];
 
   $passengerName = $user['name'];
@@ -52,7 +44,6 @@
 
         <div class="confirm-grid">
 
-          <!-- ---------- booking summary ---------- -->
           <section class="card">
             <h3 class="card-title">Booking Summary</h3>
 
@@ -91,7 +82,6 @@
             </div>
           </section>
 
-          <!-- ---------- payment ---------- -->
           <section class="card payment">
             <h3 class="card-title">Payment</h3>
 
@@ -118,10 +108,8 @@
 
           </section>
 
-          <!-- ---------- chosen method's details ---------- -->
           <section class="card pay-detail">
 
-            <!-- promptpay -->
             <div class="pay-panel pay-panel-promptpay">
               <div class="summary-row">
                 <span class="summary-label">Account Name</span>
@@ -142,7 +130,6 @@
               </div>
             </div>
 
-            <!-- card -->
             <div class="pay-panel pay-panel-card">
               <span class="pay-panel-title">Add your card details</span>
 

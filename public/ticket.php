@@ -5,12 +5,9 @@
 
   $user = require_role('passenger');
 
-  // which booking? my-bookings.php links here as ?booking=<reference>
   $reference = $_GET['booking'] ?? null;
   $found     = $reference !== null ? find_booking($reference) : null;
 
-  // no such booking, or it exists but isn't this passenger's — nothing to
-  // show, so send them back to their own list rather than error
   if ($found === null || $found['user_id'] !== $user['id']) {
       header('Location: my-bookings.php');
       exit;
@@ -30,7 +27,7 @@
   ];
 
   $boarding = $found['boarding'];
-  $total    = $found['total'];   // stored at booking time — the historical total, not recomputed from today's fare
+  $total    = $found['total'];   
 
   $page_title = 'AU VAN - Ticket';
   $user_role  = 'passenger';
@@ -45,7 +42,6 @@
 
         <div class="ticket-grid">
 
-          <!-- LEFT: booking details -->
           <section class="card ticket-details">
             <h2 class="card-title">Booking Details</h2>
 
@@ -96,7 +92,6 @@
             </dl>
           </section>
 
-          <!-- RIGHT: QR ticket -->
           <section class="card ticket-qr">
             <h2 class="card-title">Ticket</h2>
 
