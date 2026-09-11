@@ -1,16 +1,7 @@
 <?php
-/**
- * includes/vans.php
- *
- * The fleet. Shared by admin-trips.php's create-trip dropdown and (later)
- * admin-manage.php's Vans tab, so both read the same source.
- */
 
 require_once __DIR__ . '/db.php';
 
-/**
- * @return array<int, array{plate: string, seats: int}>
- */
 function get_vans(): array
 {
     $vans = [];

@@ -2,8 +2,8 @@
   $page_title = 'AU Van — Login';
   $user_role  = 'guest';
 
-  $loginError = $_GET['error'] ?? null;      // 'invalid' from login_process.php
-  $phoneValue = $_GET['phone'] ?? '';         // sticky — never the password
+  $loginError = $_GET['error'] ?? null;      
+  $phoneValue = $_GET['phone'] ?? '';         
 
   include '../includes/header.php';
 ?>

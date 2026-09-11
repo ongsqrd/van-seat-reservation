@@ -1,16 +1,4 @@
 <?php
-/**
- * public/register_process.php — handles the register.php POST.
- *
- * Validates the form, checks the phone isn't already registered, hashes
- * the password (bcrypt via password_hash()), inserts a new passenger, and
- * logs them straight in (same session shape as login_process.php) before
- * redirecting to their home.
- *
- * On any failure it redirects back to register.php with an error flag and
- * the name/phone typed (never the passwords), so the person doesn't have
- * to retype everything.
- */
 
 require_once '../includes/db.php';
 require_once '../includes/auth.php';
@@ -21,7 +9,7 @@ $fullname = trim($_POST['fullname'] ?? '');
 $phone    = trim($_POST['phone'] ?? '');
 $password = (string) ($_POST['password'] ?? '');
 $confirm  = (string) ($_POST['confirmPassword'] ?? '');
-$agreed   = isset($_POST['terms']);   // unticked checkboxes send nothing at all
+$agreed   = isset($_POST['terms']);
 
 function register_fail(string $error, string $fullname, string $phone)
 {

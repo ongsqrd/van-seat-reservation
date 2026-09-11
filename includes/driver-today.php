@@ -1,15 +1,4 @@
 <?php
-/**
- * includes/driver-today.php — backed by MySQL (mysqli).
- *
- *   get_todays_trips()        — the logged-in driver's trips today, in the
- *                                shape driver-dashboard.php expects.
- *   get_trip_manifest($tripId) — that trip's passengers, in the shape
- *                                driver-trip.php / driver-checkin.php expect.
- *
- * The driver comes from the session (require_role('driver') has already
- * run on every page that calls these, so $_SESSION['user_id'] is real).
- */
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/today.php';
@@ -18,7 +7,7 @@ function get_todays_trips(): array
 {
     $driverId = $_SESSION['user_id'] ?? null;
     if ($driverId === null) {
-        return [];   // defensive — should never happen behind require_role()
+        return [];   
     }
     $todayDate = today_iso();
 
@@ -52,7 +41,6 @@ function get_todays_trips(): array
         ];
     }
 
-    // the earliest trip today is the "next" one the dashboard highlights
     if (!empty($trips)) {
         $trips[0]['status'] = 'next';
     }
@@ -60,15 +48,6 @@ function get_todays_trips(): array
     return $trips;
 }
 
-/**
- * The passenger manifest for one trip: who's booked, how many seats,
- * where they're getting off, and whether they've boarded. The caller is
- * responsible for confirming the trip belongs to the current driver
- * (get_todays_trips() already does this — see driver-trip.php /
- * driver-checkin.php, which only reach this after that check passes).
- *
- * @return array<int, array{booking_id: int, reference: string, passenger: string, seats: int, dropoff: string, status: string}>
- */
 function get_trip_manifest(int $tripId): array
 {
     $stmt = db()->prepare("

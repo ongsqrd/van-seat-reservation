@@ -1,22 +1,8 @@
 <?php
-/**
- * includes/admin-today.php
- *
- * Admin's view of today's schedule — every trip (not scoped to one
- * driver, unlike driver-today.php), and driver availability for the
- * assign popup. Named admin-today, not admin-trips, so it can never
- * collide with the admin-trips.php page (see pages.md's naming rule).
- */
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/today.php';
 
-/**
- * Every trip scheduled for a given date (today by default), with its
- * assigned driver if any.
- *
- * @return array<int, array{id: int, route_id: int, driver_id: ?int, driver: ?string, time: string, raw_time: string}>
- */
 function get_admin_trips(?string $date = null): array
 {
     $date ??= today_iso();
@@ -52,16 +38,6 @@ function get_admin_trips(?string $date = null): array
     return $trips;
 }
 
-/**
- * Every driver, flagged available/unavailable for a specific trip slot:
- * a driver is unavailable if they're already assigned to a DIFFERENT
- * trip at that exact date + time (a genuine scheduling conflict, not
- * just "has any trip today"). $excludeTripId lets re-opening the assign
- * popup on a trip not mark that trip's own current driver as conflicting
- * with themselves.
- *
- * @return array<int, array{id: int, name: string, available: bool, status: string}>
- */
 function get_available_drivers(string $date, string $time, int $excludeTripId = 0): array
 {
     $stmt = db()->prepare("

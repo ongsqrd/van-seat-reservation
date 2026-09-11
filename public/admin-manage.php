@@ -5,11 +5,6 @@
 
   $user = require_role('admin');
 
-  /* ------------------------------------------------------------------
-     Every form (add and edit, across all four tabs) POSTs here with a
-     hidden "do" field naming which action it is, so the branches below
-     never have to guess from which fields happen to be present.
-     ------------------------------------------------------------------ */
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       switch ($_POST['do'] ?? '') {

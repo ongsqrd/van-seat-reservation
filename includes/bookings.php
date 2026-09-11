@@ -19,13 +19,12 @@ require_once __DIR__ . '/today.php';
 
 function get_bookings(): array
 {
-    // require_role() (called by every page before this) has already
-    // started the session and confirmed a passenger is logged in.
+
     $userId    = $_SESSION['user_id'] ?? null;
     $todayDate = today_iso();
 
     if ($userId === null) {
-        return [];   // defensive — should never happen behind require_role()
+        return [];   
     }
 
     $stmt = db()->prepare("
@@ -62,15 +61,6 @@ function get_bookings(): array
     return $bookings;
 }
 
-/**
- * Shared by booking-confirm.php (review) and booking-success.php (commit)
- * so the two can never validate a booking request differently. Returns
- * the resolved route/slot/dropoff on success, or null if anything about
- * the request is invalid (bad ids, dropoff not on the route, seats out of
- * range, or more seats than are actually available).
- *
- * @return array{route: array, slot: array, dropoff: string}|null
- */
 function validate_booking_request(int $routeId, int $tripId, string $dropoffKey, int $seats): ?array
 {
     require_once __DIR__ . '/routes.php';
@@ -90,12 +80,6 @@ function validate_booking_request(int $routeId, int $tripId, string $dropoffKey,
     return ['route' => $route, 'slot' => $slot, 'dropoff' => $dropoff];
 }
 
-/**
- * A fresh, unused booking reference in the seed's style (9 upper-case
- * alnum characters, e.g. F134WD24A). Checks the database so a collision
- * — vanishingly unlikely, but the column is UNIQUE — retries rather than
- * risking a failed insert.
- */
 function generate_booking_reference(): string
 {
     for ($attempt = 0; $attempt < 5; $attempt++) {
@@ -107,12 +91,6 @@ function generate_booking_reference(): string
     throw new RuntimeException('Could not generate a unique booking reference');
 }
 
-/**
- * One booking by reference, fully joined — everything ticket.php needs,
- * plus user_id/trip_id/board_status for callers that need to check
- * ownership or status (e.g. driver check-in, later). Null if the
- * reference doesn't exist.
- */
 function find_booking(string $reference): ?array
 {
     $stmt = db()->prepare("

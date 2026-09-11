@@ -5,7 +5,6 @@
 
   $user = require_role('passenger');
 
-  // which route did we arrive from? bounce back if the id is missing or bogus
   $routeId = isset($_GET['route']) ? (int) $_GET['route'] : 0;
   $route   = find_route($routeId);
 
@@ -17,7 +16,6 @@
   $slots    = get_slots($routeId);
   $dropoffs = get_dropoffs($routeId);
 
-  // two columns, filled top to bottom — the row count follows the data
   $rows = (int) ceil(count($slots) / 2);
 
   $page_title = 'AU VAN - Time';

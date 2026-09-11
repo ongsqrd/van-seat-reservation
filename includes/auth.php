@@ -1,12 +1,4 @@
 <?php
-/**
- * includes/auth.php
- *
- * One place for "which page is this role's home", so index.php and
- * login_process.php can never disagree about where a role lands.
- * Also holds the shared account helpers used by all three profile
- * pages: phone formatting and the profile-update handler.
- */
 
 require_once __DIR__ . '/db.php';
 
@@ -20,12 +12,6 @@ function role_home(string $role): string
     };
 }
 
-/**
- * The logged-in user, or redirect to login.php if there isn't one.
- * Starts the session, so call this before touching $_SESSION elsewhere.
- *
- * @return array{id: int, name: string, role: string}
- */
 function current_user(): array
 {
     session_start();

@@ -1,23 +1,6 @@
 <?php
-/**
- * includes/profile-shell.php
- *
- * Shared profile body for every role. The including page sets:
- *
- *   $profile  ['name','phone','role']
- *   $self     this page's filename, for the edit links + form action
- *             ('profile.php' | 'driver-profile.php' | 'admin-profile.php')
- *   $summary  ['label','value','href'] — the role-specific card linking to
- *             this role's home (passenger -> my-bookings, driver ->
- *             driver-dashboard, admin -> admin-dashboard). Optional.
- *   $editing  bool — whether to show the edit form (isset($_GET['edit'])).
- *
- * View vs edit is server-side ?edit state, so it stays keyboard-accessible
- * with no JS. Styling is section 7j of style.css.
- */
 
 if (!function_exists('profile_initials')) {
-    // "Jane Doe" -> "JD", multi-byte safe (same approach as the navbar)
     function profile_initials(string $name): string
     {
         $parts = preg_split('/\s+/', trim($name), -1, PREG_SPLIT_NO_EMPTY);
@@ -99,7 +82,6 @@ $editing = $editing ?? isset($_GET['edit']);
 
       <?php else: ?>
 
-        <!-- EDIT -->
         <?php if (isset($profileErrorText) && $profileErrorText !== null): ?>
           <p class="auth-error"><?= htmlspecialchars($profileErrorText) ?></p>
         <?php endif; ?>

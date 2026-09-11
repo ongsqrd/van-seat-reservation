@@ -17,7 +17,6 @@
     'role'  => 'Driver',
   ];
 
-  // role-specific summary card -> today's trips (driver home)
   $trip_count = count(get_todays_trips());
   $summary = [
     'label' => "Today's Trips",

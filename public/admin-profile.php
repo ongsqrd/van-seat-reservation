@@ -16,7 +16,6 @@
     'role'  => 'Admin',
   ];
 
-  // role-specific summary card -> the admin hub
   $summary = [
     'label' => 'Admin Dashboard',
     'value' => 'Manage trips & data',

@@ -1,25 +1,8 @@
 <?php
-/**
- * Shared departure slot data — backed by MySQL (mysqli).
- *
- * A "slot" is a scheduled trip a passenger can pick: its time, the van's
- * capacity, and live availability (capacity minus seats already booked).
- *
- *   get_slots($routeId) — the day's trips on a route, keyed by trip id, in
- *     the shape trip-times.php's departure grid expects.
- *   find_slot($tripId)  — one trip's slot, used by booking-confirm.php for
- *     the time and the seats-<=-available check.
- *
- * "Today" is the seed's demo date 2026-05-10 until a date picker / live
- * clock exists (date('Y-m-d') in production).
- */
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/today.php';
 
-/**
- * @return array<int, array{time: string, capacity: int, available: int}>
- */
 function get_slots(?int $routeId = null): array
 {
     $today = today_iso();
@@ -58,9 +41,6 @@ function get_slots(?int $routeId = null): array
     return $slots;
 }
 
-/**
- * One slot by trip id, or null if it does not exist.
- */
 function find_slot(int $id): ?array
 {
     $stmt = db()->prepare("
@@ -84,8 +64,7 @@ function find_slot(int $id): ?array
         return null;
     }
     return [
-        'route_id'  => (int) $row['route_id'],   // added so callers can confirm a trip really belongs to the route it's posted with
-        'date'      => $row['date'],
+        'route_id'  => (int) $row['route_id'],   
         'time'      => $row['time'],
         'capacity'  => (int) $row['capacity'],
         'available' => (int) $row['available'],

@@ -5,8 +5,6 @@
 
   $user = require_role('driver');
 
-  // which trip? validate against today's trips (already scoped to this
-  // driver) — bounce back if the id is bogus or isn't one of theirs
   $tripId = isset($_GET['trip']) ? (int) $_GET['trip'] : 0;
   $trip   = null;
   foreach (get_todays_trips() as $t) {
@@ -25,18 +23,6 @@
   $to    = $route['to']   ?? '';
   $date  = today_label();
 
-  /* ------------------------------------------------------------------
-     Manual entry is the real check-in path (QR scanning is simulated by
-     design — the scanner below stays decorative). Submitting a booking
-     reference:
-       - blank                     -> 'empty'
-       - no such booking           -> 'notfound'
-       - booking is for another trip -> 'wrongtrip'
-       - already boarded           -> 'already' (not an error, just a notice)
-       - otherwise                 -> marks it boarded, then redirects
-         back to this same page (POST-redirect-GET, 303) so a refresh
-         can't re-process the same submission.
-     ------------------------------------------------------------------ */
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       require_once '../includes/bookings.php';
 
@@ -56,14 +42,10 @@
           $stmt->bind_param('i', $booking['booking_id']);
           $stmt->execute();
 
-          // 303: every client must follow up with GET, so a page refresh
-          // can't resubmit the same check-in
           header('Location: driver-checkin.php?trip=' . $tripId . '&checked_in=' . urlencode($reference), true, 303);
           exit;
       }
 
-      // rejected — bounce back with the error and the reference typed,
-      // same pattern as login/register's sticky-field error banners
       header('Location: driver-checkin.php?trip=' . $tripId
              . '&error=' . $checkinError . '&ref=' . urlencode($reference), true, 303);
       exit;
@@ -86,7 +68,6 @@
   ));
   $percent  = $capacity > 0 ? round($boarded / $capacity * 100) : 0;
 
-  // "recently boarded" = everyone currently boarded on this trip
   $recently_boarded = array_values(array_filter($manifest, fn($m) => $m['status'] === 'boarded'));
 
   $page_title = 'AU VAN - Check-in';
