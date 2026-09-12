@@ -2,15 +2,7 @@
 --  AU Van Seat Reservation — seed data
 --  CE4221 · Assumption University
 --
---  Run AFTER schema.sql:  mysql -u root -h 127.0.0.1 -P 3306 au_van < db/seed.sql
---
---  Team roles for the demo: Panupong = passenger, Patchara = driver,
---  Chanyapat = admin. Patchara drives trips 3 and 10 (trip 3 is the
---  Jane + Watson manifest used in the check-in demo).
---
---  Fully consistent: every FK resolves, every trip's driver is a driver,
---  every booking's passenger is a passenger, no driver is booked on a
---  trip they drive, drop-offs are on-route, totals = fare x seats.
+--  Run AFTER schema.sql:  mysql -u root -h 127.0.0.1 -P 3306 au_van < seed.sql
 --
 --  DEV LOGIN: every account's password is  vanpass123
 -- ============================================================
@@ -93,46 +85,69 @@ INSERT INTO vans (id, plate, seats) VALUES
   (10, 'รอ 9903', 15);
 
 -- ------------------------------------------------------------
--- trips  (15)
---   #1-#10 are 2026-05-10 ("today"); #4, #6, #9 have no driver.
---   Patchara (#3) drives trips 3 and 10.  #11-#13 past, #14-#15 future.
+-- trips
+--   Today (2026-05-10) schedule, per route:
+--     Route 1  Bangna -> Assumption U.   4 departures  (08, 09, 10, 11)
+--     Route 2  Assumption U. -> Hua Mak  8 departures  (08 .. 16:30)
+--     Route 3  Assumption U. -> Bangna   4 departures  (12, 13:30, 15, 16:30)
+--     Route 4  Hua Mak -> Assumption U.  8 departures  (08 .. 16:30)
+--   4 today trips have no driver (the admin "needs a driver" alert).
+--   Patchara (#3) drives trips 13 & 14.  #25-#26 past, #27-#28 future.
+--   Driver + van assignments avoid same-time conflicts.
 -- ------------------------------------------------------------
 INSERT INTO trips (id, route_id, van_id, driver_id, trip_date, depart_time) VALUES
-  ( 1, 1,  1, 10,   '2026-05-10', '08:00:00'),
-  ( 2, 4,  2,  9,   '2026-05-10', '09:00:00'),
-  ( 3, 3,  1,  3,   '2026-05-10', '12:00:00'),   -- Patchara
-  ( 4, 2,  2, NULL, '2026-05-10', '13:30:00'),   -- needs a driver
-  ( 5, 1,  3, 11,   '2026-05-10', '15:00:00'),
-  ( 6, 2,  4, NULL, '2026-05-10', '16:30:00'),   -- needs a driver
-  ( 7, 3,  5, 12,   '2026-05-10', '07:30:00'),
-  ( 8, 4,  6, 13,   '2026-05-10', '10:30:00'),
-  ( 9, 1,  7, NULL, '2026-05-10', '17:00:00'),   -- needs a driver
-  (10, 2,  8,  3,   '2026-05-10', '11:00:00'),   -- Patchara 
-  (11, 2,  1,  9,   '2026-05-02', '11:00:00'),   -- past
-  (12, 3,  2, 10,   '2026-04-28', '09:00:00'),   -- past
-  (13, 1,  3, 11,   '2026-05-05', '08:00:00'),   -- past
-  (14, 4,  9, 12,   '2026-05-11', '09:00:00'),   -- future
-  (15, 3, 10, 13,   '2026-05-12', '12:00:00');   -- future
+  -- Route 1  Bangna -> Assumption U.
+  ( 1, 1,  1,  9,   '2026-05-10', '08:00:00'),
+  ( 2, 1,  1,  9,   '2026-05-10', '09:00:00'),
+  ( 3, 1,  1, 11,   '2026-05-10', '10:00:00'),
+  ( 4, 1,  1, NULL, '2026-05-10', '11:00:00'),   -- needs a driver
+  -- Route 2  Assumption U. -> Hua Mak
+  ( 5, 2,  2, 10,   '2026-05-10', '08:00:00'),
+  ( 6, 2,  2, 10,   '2026-05-10', '09:00:00'),
+  ( 7, 2,  2, 12,   '2026-05-10', '10:00:00'),
+  ( 8, 2,  2, 12,   '2026-05-10', '11:00:00'),
+  ( 9, 2,  4,  9,   '2026-05-10', '12:00:00'),
+  (10, 2,  4, 11,   '2026-05-10', '13:30:00'),
+  (11, 2,  4, 13,   '2026-05-10', '15:00:00'),
+  (12, 2,  4, 10,   '2026-05-10', '16:30:00'),
+  -- Route 3  Assumption U. -> Bangna
+  (13, 3,  1,  3,   '2026-05-10', '12:00:00'),   -- Patchara; manifest screen
+  (14, 3,  1,  3,   '2026-05-10', '13:30:00'),   -- Patchara
+  (15, 3,  1, NULL, '2026-05-10', '15:00:00'),   -- needs a driver
+  (16, 3,  1, 11,   '2026-05-10', '16:30:00'),
+  -- Route 4  Hua Mak -> Assumption U.
+  (17, 4,  3, 11,   '2026-05-10', '08:00:00'),
+  (18, 4,  3, NULL, '2026-05-10', '09:00:00'),   -- needs a driver
+  (19, 4,  3, 13,   '2026-05-10', '10:00:00'),
+  (20, 4,  3, 13,   '2026-05-10', '11:00:00'),
+  (21, 4,  5, 10,   '2026-05-10', '12:00:00'),
+  (22, 4,  5, 12,   '2026-05-10', '13:30:00'),
+  (23, 4,  5,  9,   '2026-05-10', '15:00:00'),
+  (24, 4,  5, NULL, '2026-05-10', '16:30:00'),   -- needs a driver
+  -- past (feed the Completed booking history)
+  (25, 3,  2, 10,   '2026-04-28', '12:00:00'),
+  (26, 2,  1,  9,   '2026-05-02', '11:00:00'),
+  -- future (upcoming beyond today)
+  (27, 4,  6, 12,   '2026-05-11', '09:00:00'),
+  (28, 3, 10, 13,   '2026-05-12', '12:00:00');
 
 -- ------------------------------------------------------------
--- bookings  (15)
---   trip #3: Jane (3 seats, boarded) + Watson (1, waiting).
---   Panupong (#14) holds the two bookings.
+-- bookings
 -- ------------------------------------------------------------
 INSERT INTO bookings
   (reference, trip_id, user_id, dropoff_stop_id, seats, payment_method, total, board_status) VALUES
-  ('F134WD24A',  3,  1, 4, 3, 'promptpay', 120, 'boarded'),  -- Jane     -> Bangna Junction
-  ('JW77XK2Q',   3,  2, 5, 1, 'card',       40, 'waiting'),  -- Watson   -> Mega Bangna
-  ('HQE34EF2',  10,  1, 3, 2, 'card',        80, 'waiting'), -- Jane     -> Hua Mak (upcoming)
-  ('A72KD91C',  11,  1, 3, 1, 'promptpay',   40, 'boarded'), -- Jane     -> Hua Mak (completed)
-  ('B65QP04E',  12,  1, 2, 4, 'card',       160, 'boarded'), -- Jane     -> Bangna (completed)
+  ('F134WD24A', 13,  1, 4, 3, 'promptpay', 120, 'boarded'),  -- Jane     -> Bangna Junction
+  ('JW77XK2Q',  13,  2, 5, 1, 'card',       40, 'waiting'),  -- Watson   -> Mega Bangna
+  ('HQE34EF2',   5,  1, 3, 2, 'card',        80, 'waiting'), -- Jane     -> Hua Mak (upcoming)
+  ('A72KD91C',  26,  1, 3, 1, 'promptpay',   40, 'boarded'), -- Jane     -> Hua Mak (completed)
+  ('B65QP04E',  25,  1, 2, 4, 'card',       160, 'boarded'), -- Jane     -> Bangna (completed)
   ('GT55RB2K',   1, 14, 1, 2, 'promptpay',   80, 'boarded'), -- Panupong -> Assumption U.
   ('LM09WQ7C',   2,  4, 1, 1, 'card',        40, 'boarded'), -- Somchai  -> Assumption U.
-  ('PN34KD8X',   5,  5, 1, 3, 'promptpay',  120, 'waiting'), -- Ananya   -> Assumption U.
-  ('QR71ZC5V',   7,  6, 6, 2, 'card',        80, 'waiting'), -- Kevin    -> Market Village
-  ('SD82YH3B',   7,  7, 5, 1, 'promptpay',   40, 'boarded'), -- Mei      -> Mega Bangna
-  ('TF19MJ6N',   8,  8, 1, 4, 'card',       160, 'waiting'), -- Arthur   -> Assumption U.
-  ('UH53PL0D',  10, 14, 3, 1, 'promptpay',   40, 'waiting'), -- Panupong -> Hua Mak
-  ('VJ64QK9M',  13,  4, 1, 2, 'card',        80, 'boarded'), -- Somchai  -> Assumption U. (completed)
-  ('WK25RN1P',  14,  5, 1, 1, 'promptpay',   40, 'waiting'), -- Ananya   -> Assumption U. (upcoming)
-  ('XL36SP7Q',  15,  6, 4, 3, 'card',       120, 'waiting'); -- Kevin    -> Bangna Junction (upcoming)
+  ('PN34KD8X',   3,  5, 1, 3, 'promptpay',  120, 'waiting'), -- Ananya   -> Assumption U.
+  ('QR71ZC5V',  14,  6, 6, 2, 'card',        80, 'waiting'), -- Kevin    -> Market Village
+  ('SD82YH3B',  14,  7, 5, 1, 'promptpay',   40, 'boarded'), -- Mei      -> Mega Bangna
+  ('TF19MJ6N',  17,  8, 1, 4, 'card',       160, 'waiting'), -- Arthur   -> Assumption U.
+  ('UH53PL0D',   5, 14, 3, 1, 'promptpay',   40, 'waiting'), -- Panupong -> Hua Mak
+  ('VJ64QK9M',  25,  4, 2, 2, 'card',        80, 'boarded'), -- Somchai  -> Bangna (completed)
+  ('WK25RN1P',  27,  5, 1, 1, 'promptpay',   40, 'waiting'), -- Ananya   -> Assumption U. (upcoming)
+  ('XL36SP7Q',  28,  6, 4, 3, 'card',       120, 'waiting'); -- Kevin    -> Bangna Junction (upcoming)
