@@ -28,15 +28,6 @@ function current_user(): array
     ];
 }
 
-/**
- * Require the logged-in user to hold one of the given roles. A guest is
- * sent to login.php (via current_user()); a logged-in user with the wrong
- * role is sent to *their* home rather than shown an error — the page just
- * isn't for them, the same way a passenger doesn't see an "access denied"
- * for a page that's simply not part of their flow.
- *
- * @return array{id: int, name: string, role: string}
- */
 function require_role(string ...$roles): array
 {
     $user = current_user();
@@ -49,31 +40,14 @@ function require_role(string ...$roles): array
     return $user;
 }
 
-/**
- * Thai mobile numbers are stored as plain digits (0913345776);
- * display them grouped 3-3-4 the way the UI always has. Shared by all
- * three profile pages so there's one copy, not three.
- */
 function format_phone_display(string $phone): string
 {
     if (preg_match('/^(\d{3})(\d{3})(\d{4})$/', $phone, $m)) {
         return "{$m[1]} {$m[2]} {$m[3]}";
     }
-    return $phone;   // unexpected format — show as stored rather than mangle it
+    return $phone;  
 }
 
-/**
- * Handles the profile-shell.php edit form's POST, shared by all three
- * roles' profile pages. Must be called BEFORE header.php is included —
- * like every other write path in this app, it may redirect, and PHP
- * can't send a Location header after any output has already gone out.
- *
- * Password change is optional: leaving both password fields blank keeps
- * the existing password and only updates name/phone. Filling either one
- * requires both to match and be at least 8 characters.
- *
- * A no-op on a GET request, so pages can call this unconditionally.
- */
 function handle_profile_update(int $userId, string $selfPage): void
 {
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
@@ -116,7 +90,6 @@ function handle_profile_update(int $userId, string $selfPage): void
     }
     $stmt->execute();
 
-    // keep the session/navbar name in sync immediately, no re-login needed
     $_SESSION['user_name'] = $name;
 
     header('Location: ' . $selfPage, true, 303);
